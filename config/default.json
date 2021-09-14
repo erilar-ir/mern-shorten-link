@@ -1,6 +1,0 @@
-{
-  "port": 5000,
-  "jwtSecret": "The golden retriever loved the fireworks each Fourth of July",
-  "mongoUri": "mongodb+srv://ivanr:3db1Bo3QwC9Pg8FE@cluster0.idlxq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-  "baseUrl": "http://localhost:5000"
-}

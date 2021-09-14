@@ -1,0 +1,10 @@
+.links-list {
+
+}
+
+.no-links {
+    width: auto;
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+}

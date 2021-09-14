@@ -4,12 +4,20 @@ const shortid = require('shortid')
 const Link = require('../models/Link')
 const auth = require('../middleware/auth.middleware')
 
+let baseUrl
+if (process.env.NODE_ENV === 'production') {
+    baseUrl = process.env.BASE_URL
+}
+if (process.env.NODE_ENV === 'development') {
+    baseUrl = config.get('baseUrl')
+}
+
 
 const router = Router()
 router.post('/generate', auth, async (req, res) => {
     try {
         console.log('Enter Generate')
-        const baseUrl = config.get('baseUrl')
+
         const {from} = req.body
 
         const existingLink = await Link.findOne({from})

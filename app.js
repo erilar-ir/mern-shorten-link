@@ -4,8 +4,18 @@ const app = express()
 const mongoose = require('mongoose')
 const path = require("path");
 
-const PORT = config.get('port') || 5000
-const MONGO_URI = config.get('mongoUri')
+let PORT
+let MONGO_URI
+
+if (process.env.NODE_ENV === 'production') {
+    PORT = process.env.PORT
+    MONGO_URI = process.env.MONGO_URI
+}
+if (process.env.NODE_ENV === 'development') {
+    PORT = config.get('port') || 5000
+    MONGO_URI = config.get('mongoUri')
+}
+
 
 
 app.use(express.json({ extended: true }))

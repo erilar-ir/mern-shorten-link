@@ -6,6 +6,14 @@ const {check, validationResult} = require('express-validator')
 const User = require('../models/User')
 const router = Router()
 
+let secret
+
+if (process.env.NODE_ENV === 'production') {
+    secret = process.env.JWT_SECRET
+}
+if (process.env.NODE_ENV === 'development') {
+    secret = config.get('jwtSecret')
+}
 
 // /api/auth/register
 router.post('/register',
@@ -77,7 +85,7 @@ router.post('/login', [
             const token  = jwt.sign({
                 userId: user.id
             },
-                config.get('jwtSecret'),
+                secret,
                 {
                     expiresIn: '1h'
                 }

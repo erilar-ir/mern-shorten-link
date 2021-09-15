@@ -4,7 +4,8 @@
   "description": "node express mongodb react",
   "main": "app.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node app.js",
+    "start": "node app.js",
+    "cross-start": "cross-env NODE_ENV=production node app.js",
     "server": "nodemon app.js",
     "client-start": "npm run start --prefix client",
     "client-dev": "npm run dev --prefix client",

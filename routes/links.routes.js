@@ -60,4 +60,18 @@ router.get('/:id', auth,  async (req, res) => {
     }
 })
 
+router.post('/remove/:id', auth, async (req, res) => {
+    try {
+        const link = await Link.findById(req.params.id)
+
+        await link.remove()
+
+        res.json({message: `Link to ${link.from} successfully removed.`})
+
+    } catch (e) {
+        res.status(e.status).json({message: 'Something went wrong, try again later'})
+    }
+})
+
+
 module.exports = router

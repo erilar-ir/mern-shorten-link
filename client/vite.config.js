@@ -1,24 +1,29 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
-import config from "config";
 
-let baseUrl
-if (process.env.NODE_ENV === 'production') {
-  baseUrl = process.env.BASE_URL
-}
-if (process.env.NODE_ENV === 'development') {
-  baseUrl = config.get('baseUrl')
-}
-// https://vitejs.dev/config/
-export default defineConfig({
-  server: {
-    proxy: {
-      '/api': {
-        target: baseUrl,
-        changeOrigin: true
-      }
-    }
-  },
-  plugins: [reactRefresh()],
-
+export default defineConfig(({ command, mode }) => {
+  if (command === 'serve') {
+    return {
+      server: {
+        proxy: {
+          '/api': {
+            target: 'http://localhost:5000',
+            changeOrigin: true
+          }
+        }
+      },
+      plugins: [reactRefresh()]    }
+  } else {
+    process.env = {...process.env, ...loadEnv(mode, process.cwd())}
+    return {
+      server: {
+        proxy: {
+          '/api': {
+            target: process.env.VITE_BASE_URL,
+            changeOrigin: true
+          }
+        }
+      },
+      plugins: [reactRefresh()]      }
+  }
 })

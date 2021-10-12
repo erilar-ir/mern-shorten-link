@@ -1,28 +1,29 @@
+require('dotenv').config()
 const express = require('express')
-const config = require('config')
+const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const app = express()
 const mongoose = require('mongoose')
 const path = require("path");
+const errorMiddleware = require('./middleware/error.middleware');
 
-let PORT
-let MONGO_URI
 
-if (process.env.NODE_ENV === 'production') {
-    PORT = process.env.PORT
-    MONGO_URI = process.env.MONGO_URI
+const PORT = process.env.PORT
+const MONGO_URI = process.env.MONGO_URI
+
+app.use(express.json())
+app.use(cookieParser())
+app.use(cors(
+    {
+    credentials: true,
+    origin: process.env.CLIENT_URL
 }
-if (process.env.NODE_ENV === 'development') {
-    PORT = config.get('port') || 5000
-    MONGO_URI = config.get('mongoUri')
-}
-
-
-
-app.use(express.json({ extended: true }))
-
+))
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/link', require('./routes/links.routes'))
 app.use('/t', require('./routes/redirect.routes'))
+app.use(errorMiddleware);
+
 
 if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(path.join(__dirname, 'client', 'dist')))

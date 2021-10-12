@@ -1,77 +1,13 @@
 const {Router} = require('express')
-const config = require('config')
-const shortid = require('shortid')
-const Link = require('../models/Link')
 const auth = require('../middleware/auth.middleware')
-
-let baseUrl
-if (process.env.NODE_ENV === 'production') {
-    baseUrl = process.env.BASE_URL
-}
-if (process.env.NODE_ENV === 'development') {
-    baseUrl = config.get('baseUrl')
-}
-
+const {generate, getLinks, linkDetails, removeLink} = require('../controllers/link-controller')
 
 const router = Router()
-router.post('/generate', auth, async (req, res) => {
-    try {
-        console.log('Enter Generate')
 
-        const {from} = req.body
-
-        const existingLink = await Link.findOne({from})
-
-        if (existingLink) {
-            return res.json({link: existingLink})
-        }
-
-        const code = shortid.generate()
-
-        const to = baseUrl + '/t/' + code
-
-        const  link = new Link({
-            code, to, from, owner: req.user.userId
-        })
-
-        await link.save()
-
-        res.status(201).json({link})
-
-    } catch (e) {
-        res.status(e.status).json({message: 'Something went wrong, try again later'})
-    }
-})
-router.get('/', auth,async (req, res) => {
-    try {
-    const links = await Link.find({owner: req.user.userId} )
-    res.json(links)
-    } catch (e) {
-        res.status(e.status).json({message: 'Something went wrong, try again later'})
-    }
-})
-router.get('/:id', auth,  async (req, res) => {
-    try {
-        const link = await Link.findById(req.params.id)
-        res.json(link)
-
-    } catch (e) {
-        res.status(e.status).json({message: 'Something went wrong, try again later'})
-    }
-})
-
-router.post('/remove/:id', auth, async (req, res) => {
-    try {
-        const link = await Link.findById(req.params.id)
-
-        await link.remove()
-
-        res.json({message: `Link to ${link.from} successfully removed.`})
-
-    } catch (e) {
-        res.status(e.status).json({message: 'Something went wrong, try again later'})
-    }
-})
+router.post('/generate', auth, generate)
+router.get('/', auth, getLinks)
+router.get('/:id', auth, linkDetails)
+router.post('/remove/:id', auth, removeLink)
 
 
 module.exports = router

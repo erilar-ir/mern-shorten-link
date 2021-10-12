@@ -11,28 +11,33 @@ import Loader from "../loader";
 
 
 function App() {
-    const {token, userId, login, logout, ready} = useAuth()
+    const {token, userId, login, logout, ready, checkAuth} = useAuth()
     const isAuthenticated = !!token
     const routes = Routes(isAuthenticated)
 
     if (!ready) {
-        return <Loader />
+        return <Loader/>
     }
 
+
     return (
-        <AuthContext.Provider value={
-            {token, userId, login, logout, isAuthenticated}
-        }>
+            <AuthContext.Provider value={
+                {token, userId, login, logout, isAuthenticated, checkAuth}
+            }>
 
-            <Router>
-                {isAuthenticated && <Header/>}
-                <div className={'container'}>
-                    {routes}
-                </div>
+                <Router>
+                    {isAuthenticated && <Header/>}
+                    <div className={'container'}>
+                        {routes}
+                    </div>
 
-            </Router>
-        </AuthContext.Provider>
+                </Router>
+
+            </AuthContext.Provider>
     )
 }
 
 export default App
+
+
+

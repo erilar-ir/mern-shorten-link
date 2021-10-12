@@ -1,3 +1,6 @@
 .link-card {
 
 }
+.link-card .span-link {
+    cursor: pointer;
+}

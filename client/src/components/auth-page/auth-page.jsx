@@ -2,11 +2,13 @@ import React, {useContext, useEffect, useState} from "react";
 import './auth-page.css'
 import {useHttp, useMessage} from "../../hooks";
 import {AuthContext} from "../../context";
+import {AuthService} from "../../services";
 
 export const AuthPage = () => {
     const auth = useContext(AuthContext)
 
-    const {loading, error, request, clearError} = useHttp()
+    const {loading, error, clearError} = useHttp()
+    const {login, register} = AuthService()
     const [form, setForm] = useState({
         email: '', password: ''
     })
@@ -22,18 +24,21 @@ export const AuthPage = () => {
 
     const registerHandler = async () => {
       try {
-          const data = await request('/api/auth/register', 'POST', {...form})
-          message(data.message)
+          await register(form.email, form.password)
+          message(`User created successfully. Activation link sent to ${form.email}.`)
       }catch (e) {
-
+          message(e.message)
+          // console.log(e)
       }
     }
     const loginHandler = async () => {
       try {
-          const data = await request('/api/auth/login', 'POST', {...form})
-          auth.login(data.token, data.userId)
+          const data = await login(form.email, form.password)
+          auth.login(data.accessToken, data.user.id)
       }catch (e) {
+          message(e.message)
 
+          console.log(e)
       }
     }
 

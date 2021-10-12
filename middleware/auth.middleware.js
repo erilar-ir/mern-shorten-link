@@ -1,30 +1,27 @@
-const jwt = require('jsonwebtoken')
-const config = require('config')
+const ErrorHandler = require("../exceptions/error-handler");
+const tokenService = require('../service/token-service')
 
-let secret
-
-if (process.env.NODE_ENV === 'production') {
-    secret = process.env.JWT_SECRET
-}
-if (process.env.NODE_ENV === 'development') {
-    secret = config.get('jwtSecret')
-}
 
 module.exports = (req, res, next) => {
-    if (req.method === 'OPTIONS') {
-        return next()
-    }
     try {
-        const token = req.headers.authorization.split(' ')[1]
-        if (token == null) {
-            return res.status(401).json({message: 'Not authorized'})
+        const authorizationHeader = req.headers.authorization
+        // console.log('Authorization: ', authorizationHeader)
+        if (!authorizationHeader) {
+            return next(ErrorHandler.UnauthorizedError('No Authorization Header'))
         }
 
-        req.user = jwt.verify(token, secret)
-
+        const accessToken = authorizationHeader.split(' ')[1]
+        if (!accessToken) {
+            return next(ErrorHandler.UnauthorizedError('No Access Token'))
+        }
+        const userData = tokenService.validateAccessToken(accessToken)
+        // console.log('UserData: ', userData)
+        if (!userData) {
+            return next(ErrorHandler.UnauthorizedError(' Wrong Access Token'))
+        }
+        req.user = userData
         next()
-
     } catch (e) {
-        res.status(401).json({message: 'Not authorized'})
+        return next(ErrorHandler.UnauthorizedError('Authorization Validation Failed'))
     }
 }

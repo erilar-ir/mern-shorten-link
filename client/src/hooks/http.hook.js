@@ -1,39 +1,36 @@
 import {useCallback, useState} from "react";
+import $api from "../services/api.service";
+
 
 export const useHttp = () => {
+
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
-    const request = useCallback(async (url, method = 'GET', body = null, headers = {}) => {
-
+    const request = useCallback(async (url, method = 'GET', body = null) => {
         setLoading(true)
 
         try {
+            const response = await $api(url, {method: method, data: body})
 
-            if (body) {
-                body = JSON.stringify(body)
-                headers['Content-Type'] = 'application/json'
-            }
-            const response = await fetch(url, {method, body, headers})
-            const data = await response.json()
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Something went wrong')
-            }
+            const data =  response.data
 
             setLoading(false)
 
             return data
         } catch (e) {
             setLoading(false)
-            setError(e.message)
-            throw e
+            setError(e)
+            console.log(e)
+            return Promise.reject(e)
         }
     }, [])
+
 
 
     const clearError = useCallback(() => {
         setError(null)
     } ,[])
+
 
     return {loading, error, request, clearError}
 }

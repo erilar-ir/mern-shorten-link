@@ -2,16 +2,18 @@ import React, {useContext} from "react";
 import {NavLink, useHistory} from "react-router-dom";
 import {AuthContext} from "../../context";
 import './header.css'
+import {useMessage} from "../../hooks";
 
 export const Header = () => {
 
   const history = useHistory()
-
+  const message = useMessage()
   const { logout } = useContext(AuthContext)
-  const logoutHandler =  event => {
+  const logoutHandler = async event => {
     event.preventDefault()
-    logout()
+    await logout()
     history.push('/')
+    message('Logged Out')
   }
 
   return (

@@ -2,7 +2,7 @@ const {Router} = require('express')
 const Link = require('../models/Link')
 const router = Router()
 
-router.get('/:code', async (req, res) => {
+router.get('/:code', async (req, res, next) => {
     try {
 
         const link = await Link.findOne({code: req.params.code})
@@ -15,7 +15,8 @@ router.get('/:code', async (req, res) => {
         return res.redirect(link.from)
 
     } catch (e) {
-        res.status(e.status).json({message: 'Something went wrong, try again later'})
+        e.message = 'Something went wrong, try again later'
+        next(e)
     }
 })
 

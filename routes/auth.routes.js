@@ -1,100 +1,17 @@
 const {Router} = require('express')
-const bcrypt = require('bcryptjs')
-const config = require('config')
-const jwt = require('jsonwebtoken')
-const {check, validationResult} = require('express-validator')
-const User = require('../models/User')
+const {registration, login, logout, refresh, activateLink} = require('../controllers/user-controller')
 const router = Router()
 
-let secret
 
-if (process.env.NODE_ENV === 'production') {
-    secret = process.env.JWT_SECRET
-}
-if (process.env.NODE_ENV === 'development') {
-    secret = config.get('jwtSecret')
-}
+const {body} = require('express-validator')
 
-// /api/auth/register
 router.post('/register',
-    [
-        check('email', 'Invalid email').isEmail(),
-        check('password', 'Minimal password length is 6 symbols').isLength({min: 6})
-    ],
-    async (req, res) => {
-        try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return res.status(400).json({
-                    errors: errors.array(),
-                    message: 'Invalid registration form data'
-                })
-            }
-
-
-            const {email, password} = req.body
-
-            const candidate = await User.findOne({email: email})
-
-            if (candidate) {
-                return res.status(400).json({message: 'User with this email already exists'})
-            }
-            const hashPassword = await bcrypt.hash(password, 12)
-
-            const user = new User({email, password: hashPassword})
-
-            await user.save()
-            res.status(201).json({message: 'User created'})
-
-        } catch (e) {
-            res.status(e.status).json({message: 'Something went wrong, try again later'})
-        }
-    })
-
-// /api/auth/login
-router.post('/login', [
-        check('email', 'Please enter valid email').isEmail(),
-        check('password', 'Enter password').exists()
-    ],
-    async (req, res) => {
-        try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return res.status(400).json({
-                    errors: errors.array(),
-                    message: 'Invalid login form data'
-                })
-            }
-            const {email, password} = req.body
-            const user = await User.findOne({email})
-
-            if (!user) {
-                return res.status(400).json({
-                    message: 'User not found'
-                })
-            }
-
-            const isMatch = await bcrypt.compare(password, user.password)
-
-            if (!isMatch) {
-                return res.status(400).json({
-                    message: 'Invalid password'
-                })
-            }
-
-            const token  = jwt.sign({
-                userId: user.id
-            },
-                secret,
-                {
-                    expiresIn: '1h'
-                }
-                )
-            res.json({token, userId: user.id})
-
-        } catch (e) {
-            res.status(e.status).json({message: 'Something went wrong, try again later'})
-        }
-})
+    body('email').isEmail(),
+    body('password').isLength({min: 3, max: 24}),
+    registration)
+router.post('/login', login)
+router.post('/logout', logout)
+router.get('/activate/:link', activateLink)
+router.get('/refresh', refresh)
 
 module.exports = router

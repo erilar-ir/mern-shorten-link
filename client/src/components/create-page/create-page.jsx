@@ -1,14 +1,20 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import './create-page.css'
-import {useHttp} from "../../hooks";
+import {useHttp, useMessage} from "../../hooks";
 import {AuthContext} from "../../context";
 import {useHistory} from "react-router-dom";
+import Loader from "../loader";
 
 export const CreatePage = () => {
-    const {token} = useContext(AuthContext)
-    const {request} = useHttp()
+    const message = useMessage()
+    const {isAuthenticated, checkAuth} = useContext(AuthContext)
+    const {request, loading} = useHttp()
     const history = useHistory()
     const [link, setLink] = useState('')
+
+    useEffect(async ()=> {
+        await checkAuth()
+    }, [checkAuth])
 
     const linkHandler = event => {
       setLink(event.target.value)
@@ -16,20 +22,26 @@ export const CreatePage = () => {
 
     const generateLink = async () => {
         try {
-          const data = await request('/api/link/generate', 'POST', {from: link}, {
-              Authorization: `Bearer ${token}`
-          })
+          const data = await request('/api/link/generate', 'POST', {from: link})
             history.push(`/details/${data.link._id}`)
-             console.log(data)
+            message(`Short link created for ${data.link.from}`)
+             // console.log('Generate data', data)
         } catch (e) {
-
+            message(e.message)
+            console.log(e)
         }
     }
 
-    const enterPressHandler =  event => {
+    const enterPressHandler = async event => {
         if (event.key === 'Enter') {
-             generateLink()
+             await generateLink()
         }
+    }
+    if (loading) {
+        return <Loader />
+    }
+    if (!isAuthenticated) {
+        return history.push('/')
     }
     return (
         <div className={'create-page'}>
@@ -41,6 +53,7 @@ export const CreatePage = () => {
                     </div>
                     <div className="buttons">
                         <button className="btn teal lighten-2" onClick={generateLink}>Generate Link</button>
+
                     </div>
                 </div>
             </div>

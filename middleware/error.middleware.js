@@ -1,10 +1,10 @@
 const ErrorHandler = require('../exceptions/error-handler')
 
-module.exports = function (err, req, res) {
-    console.log(err)
-    if (err instanceof ErrorHandler) {
-        return res.status(err.status).json({message: err.message, errors: err.errors})
+module.exports = function (error, request, response, next) {
+    console.log(error)
+    if (error instanceof ErrorHandler) {
+        return response.status(error.status).json({message: error.message, errors: error.errors})
     }
 
-    return res.status(500).json({message: `Uncaught error. Error message is: ${err.message}`})
+    return response.status(500).json({message: `Uncaught error. Error message is: ${error.message}`})
 }

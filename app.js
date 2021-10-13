@@ -14,7 +14,10 @@ const MONGO_URI = process.env.MONGO_URI
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors(
-
+    {
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}
 ))
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/link', require('./routes/links.routes'))

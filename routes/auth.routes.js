@@ -9,7 +9,11 @@ router.post('/register',
     body('email').isEmail(),
     body('password').isLength({min: 3, max: 24}),
     registration)
-router.post('/login', login)
+router.post('/login',
+    body('email').notEmpty(),
+    body('email').isEmail(),
+    body('password').isLength({min: 3, max: 24}),
+    login)
 router.post('/logout', logout)
 router.get('/activate/:link', activateLink)
 router.get('/refresh', refresh)

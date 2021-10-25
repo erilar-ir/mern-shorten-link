@@ -13,7 +13,7 @@ export const Header = () => {
     event.preventDefault()
     await logout()
     history.push('/')
-    message('Logged Out')
+    message('Logged Out', 'success')
   }
 
   return (
@@ -23,6 +23,7 @@ export const Header = () => {
           <ul id="nav-mobile" className="right hide-on-med-and-down">
             <li><NavLink to={'/create'}>Create</NavLink></li>
             <li><NavLink to={'/links'}>Links</NavLink></li>
+            <li><NavLink to={'/uconsole'}>User Console</NavLink></li>
             <li><a href="/" onClick={logoutHandler}>Logout</a></li>
           </ul>
         </div>

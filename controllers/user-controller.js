@@ -24,6 +24,11 @@ class UserController {
 
     async login(req, res, next) {
         try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                console.log(errors.array())
+                return next(ErrorHandler.BadRequest('Validation error', errors.array()))
+            }
             const {email, password} = req.body
             const userData = await userService.login(email, password)
             return generateRefreshToken(res, userData)
@@ -59,15 +64,6 @@ class UserController {
             const activationLink = req.params.link
             await userService.activate(activationLink)
             return res.redirect(process.env.CLIENT_URL)
-        } catch (e) {
-            next(e)
-        }
-    }
-
-    async getUsers(req, res, next) {
-        try {
-            const users = await userService.getAllUsers()
-            return res.json(users)
         } catch (e) {
             next(e)
         }

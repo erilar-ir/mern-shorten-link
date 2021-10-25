@@ -1,5 +1,6 @@
 const UserModel = require('../models/User')
 const LinkModel = require('../models/Link')
+const GroupModel = require('../models/Group')
 const bcrypt = require('bcryptjs')
 const uuid = require('uuid')
 const mailService = require('../service/mail-service')
@@ -53,6 +54,8 @@ class UserService {
         user.expireAt = undefined
         await user.save()
         await LinkModel.updateMany({owner: user._id}, {$unset: {expireAt: 1}})
+        await GroupModel.updateMany({owner: user._id}, {$unset: {expireAt: 1}})
+
 
     }
 
@@ -71,27 +74,22 @@ class UserService {
     }
 
     async logout(refreshToken) {
-        const token = await tokenService.removeToken(refreshToken)
-        return token
+        return await tokenService.removeToken(refreshToken)
     }
 
     async refresh(refreshToken) {
         if (!refreshToken) {
-            throw ErrorHandler.UnauthorizedError('No refresh token provided')
+            throw ErrorHandler.UnauthorizedError('Not authorized')
         }
         const userData = tokenService.validateRefreshToken(refreshToken)
         const tokenFromDb = await tokenService.findToken(refreshToken)
         if (!userData || !tokenFromDb) {
-            throw ErrorHandler.UnauthorizedError('Wrong refresh token')
+            throw ErrorHandler.UnauthorizedError('Not authorized')
         }
         const user = await UserModel.findById(userData.id)
         return createAndSaveTokens(user)
     }
 
-    async getAllUsers() {
-        const users = await UserModel.find()
-        return users
-    }
 }
 
 module.exports = new UserService()

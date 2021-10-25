@@ -1,0 +1,16 @@
+.back-to-console {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: fit-content;
+    color: teal;
+}
+.back-to-console:hover {
+    color: lightskyblue;
+}
+.back-to-console i{
+    position: relative;
+}
+.back-to-console p{
+    margin-left: 5px;
+}

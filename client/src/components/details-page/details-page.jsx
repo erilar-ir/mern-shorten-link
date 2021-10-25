@@ -20,14 +20,13 @@ export const DetailsPage = () => {
             const link = await linkDetails(linkId)
                 .catch(error => {
                 history.push('/links')
-                message(error.message)
+                message(error.message, 'error')
             })
             await setLink(link)
 
         } catch (e) {
             history.push('/links')
-            message(e.message)
-            console.log(e)
+            message(e.message, 'error')
         }
 
     }, [linkClicks])
@@ -37,11 +36,11 @@ export const DetailsPage = () => {
             .then(
                 data => {
                     history.push('/links')
-                    message(data.message)
+                    message(data.message, 'success')
                 })
             .catch(e => {
                 console.log(e)
-                message(e.message)
+                message(e.message, 'error')
             })
 
     }, [linkId])

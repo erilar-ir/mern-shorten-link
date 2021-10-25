@@ -25,10 +25,9 @@ export const AuthPage = () => {
     const registerHandler = async () => {
       try {
           await register(form.email, form.password)
-          message(`User created successfully. Activation link sent to ${form.email}.`)
+          message(`User created successfully. Activation link sent to ${form.email}.`, 'success')
       }catch (e) {
-          message(e.message)
-          // console.log(e)
+          message(e.message, 'error')
       }
     }
     const loginHandler = async () => {
@@ -36,9 +35,7 @@ export const AuthPage = () => {
           const data = await login(form.email, form.password)
           auth.login(data.accessToken, data.user.id)
       }catch (e) {
-          message(e.message)
-
-          console.log(e)
+          message(e.message, 'error')
       }
     }
 

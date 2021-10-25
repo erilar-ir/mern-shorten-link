@@ -1,0 +1,16 @@
+.group-card{
+
+}
+.group-links {
+    margin-bottom: 2.5rem;
+}
+.group-link {
+    line-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin: 5px 10px;
+}
+.link-name {
+    margin-left: 10px;
+}

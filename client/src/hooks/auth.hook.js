@@ -48,11 +48,11 @@ export const useAuth = () => {
                 const error = e.response.data
                 console.log(`axios error: ${error.message}`)
                 await logout()
-                message('Please login again')
+                message('Please login again', 'warn')
             }
         }
         else {
-            message('Please login first')
+            message('Please login again', 'warn')
         }
 
     }, [])
@@ -63,7 +63,7 @@ export const useAuth = () => {
             await checkAuth()
 
         } else {
-            message('Please login first')
+            message('Please login again', 'warn')
 
         }
         setReady(true)

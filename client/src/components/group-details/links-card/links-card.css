@@ -1,0 +1,16 @@
+.links-card {
+    /*padding: 5px 10px;*/
+}
+.links-list {
+    margin-bottom: 10px;
+}
+.link-item {
+    line-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin: 5px 10px;
+}
+.link-name {
+    margin-left: 10px;
+}

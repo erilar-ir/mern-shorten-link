@@ -7,19 +7,19 @@ export const useHttp = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const request = useCallback(async (url, method = 'GET', body = null) => {
-        setLoading(true)
+        await setLoading(true)
 
         try {
             const response = await $api(url, {method: method, data: body})
 
             const data =  response.data
 
-            setLoading(false)
+            await setLoading(false)
 
             return data
         } catch (e) {
-            setLoading(false)
-            setError(e)
+            await setLoading(false)
+            await setError(e)
             console.log(e)
             return Promise.reject(e)
         }
@@ -27,8 +27,8 @@ export const useHttp = () => {
 
 
 
-    const clearError = useCallback(() => {
-        setError(null)
+    const clearError = useCallback(async () => {
+        await setError(null)
     } ,[])
 
 

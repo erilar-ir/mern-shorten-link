@@ -16,7 +16,7 @@ export const LinksPage = () => {
             setLinks(fetched)
         } catch (e) {
             console.log(e)
-            message(e.message)
+            message(e.message, 'error')
             if (e.status === 401) {
                 await logout()
             }

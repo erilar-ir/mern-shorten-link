@@ -24,11 +24,10 @@ export const CreatePage = () => {
         try {
           const data = await request('/api/link/generate', 'POST', {from: link})
             history.push(`/details/${data.link._id}`)
-            message(`Short link created for ${data.link.from}`)
+            message(`Short link created for ${data.link.from}`, 'success')
              // console.log('Generate data', data)
         } catch (e) {
-            message(e.message)
-            console.log(e)
+            message(e.message, 'error')
         }
     }
 
@@ -49,7 +48,7 @@ export const CreatePage = () => {
                 <div className="col s8 offset-s2">
                     <div className="input-field">
                         <input type="text" id={'link'} value={link} onChange={linkHandler} onKeyPress={enterPressHandler}/>
-                        <label htmlFor="{'email'}">Enter link</label>
+                        <label htmlFor="{'link'}">Enter link</label>
                     </div>
                     <div className="buttons">
                         <button className="btn teal lighten-2" onClick={generateLink}>Generate Link</button>

@@ -51,7 +51,7 @@ export const Header = () => {
                     </div>
                 </nav>
                 <ul className="sidenav" id="mobile-menu">
-                    <li className={split[1] === 'create' ? 'active' : ''}><NavLink to={'/auth'}><i
+                    <li className={split[1] === 'auth' ? 'active' : ''}><NavLink to={'/auth'}><i
                         className={'material-icons'}>account_circle</i>Login /
                         Register</NavLink></li>
                 </ul>
@@ -84,7 +84,7 @@ export const Header = () => {
             </nav>
             <ul className="sidenav" id="mobile-menu">
                 <li className={split[1] === 'create' ? 'active' : ''}>
-                    <NavLink to={'/create'} className={'sidenav-close'}><i className={'material-icons left'}>add</i> Create</NavLink>
+                    <NavLink className={'sidenav-close'} to={'/create'} ><i className={'material-icons left'}>add</i> Create</NavLink>
                 </li>
                 <li className={split[1] === 'links' ? 'active' : ''}><NavLink className={'sidenav-close'}
                                                                               to={'/links'}>Links</NavLink></li>

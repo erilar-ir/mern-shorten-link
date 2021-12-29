@@ -1,18 +1,23 @@
 import React from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
 
+import WelcomePage from "../components/welcome-page";
 import LinksPage from "../components/links-page";
 import CreatePage from "../components/create-page";
 import DetailsPage from "../components/details-page";
 import AuthPage from "../components/auth-page";
-import UserConsole from "../components/user-console";
+import GroupsManagement from "../components/groups-manage";
 import GroupDetails from "../components/group-details";
+import DashboardPage from "../components/dashboard-page";
 
 export const Routes = (isAuthenticated) => {
     if (!isAuthenticated) {
         return (
             <Switch>
                 <Route path={'/'} exact>
+                    <WelcomePage />
+                </Route>
+                <Route path={'/auth'} exact>
                     <AuthPage />
                 </Route>
                 <Redirect to={'/'} />
@@ -22,22 +27,35 @@ export const Routes = (isAuthenticated) => {
 
     return (
         <Switch>
+            <Route path={'/'} exact>
+                <DashboardPage />
+            </Route>
             <Route path={'/links'} exact>
-                <LinksPage/>
+                <div className={'container'}>
+                    <LinksPage/>
+                </div>
             </Route>
             <Route path={'/create'} exact>
-                <CreatePage/>
+                <div className={'container'}>
+                    <CreatePage/>
+                </div>
             </Route>
             <Route path={'/details/:id'}>
-                <DetailsPage/>
+                <div className={'container'}>
+                    <DetailsPage/>
+                </div>
             </Route>
             <Route path={'/groups/:id'}>
-                <GroupDetails />
+                <div className={'container'}>
+                    <GroupDetails />
+                </div>
             </Route>
-            <Route path={'/uconsole'}>
-                <UserConsole/>
+            <Route path={'/management'}>
+                <div className={'container'}>
+                    <GroupsManagement/>
+                </div>
             </Route>
-            <Redirect to={'/create'}/>
+            <Redirect to={'/'}/>
         </Switch>
     )
 }

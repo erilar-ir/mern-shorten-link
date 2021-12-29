@@ -1,3 +1,6 @@
+.group-row {
+    gap: 2rem;
+}
 .back-to-console {
     display: flex;
     justify-content: left;
@@ -13,4 +16,12 @@
 }
 .back-to-console p{
     margin-left: 5px;
+}
+.button-group {
+    display: flex;
+    flex-direction: row;
+
+}
+.button-group button,a {
+    margin-right: 10px;
 }

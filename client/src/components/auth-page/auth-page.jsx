@@ -1,22 +1,25 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useState} from "react";
 import './auth-page.css'
-import {useHttp, useMessage} from "../../hooks";
-import {AuthContext} from "../../context";
-import {AuthService} from "../../services";
+import { useMessage} from "../../hooks";
+import {useDispatch, useSelector} from "react-redux";
+import {login, register, selectAuthReady} from "../../store/auth-slice";
 
 export const AuthPage = () => {
-    const auth = useContext(AuthContext)
 
-    const {loading, error, clearError} = useHttp()
-    const {login, register} = AuthService()
+    const dispatch = useDispatch()
+    // const error = useSelector(selectAuthError)
+    const ready = useSelector(selectAuthReady)
+
     const [form, setForm] = useState({
         email: '', password: ''
     })
     const message = useMessage()
-    useEffect(() => {
-        message(error)
-        clearError()
-    }, [error, message, clearError])
+    // useEffect(async () => {
+    //     if (error) {
+    //         message(error.message, 'warn')
+    //         dispatch(clearError)
+    //     }
+    // }, [error])
 
     const formHandler = (event) => {
         setForm({...form, [event.target.name]: event.target.value})
@@ -24,7 +27,9 @@ export const AuthPage = () => {
 
     const registerHandler = async () => {
       try {
-          await register(form.email, form.password)
+          const email = form.email
+          const password = form.password
+          await dispatch(register({email: email, password: password})).unwrap()
           message(`User created successfully. Activation link sent to ${form.email}.`, 'success')
       }catch (e) {
           message(e.message, 'error')
@@ -32,8 +37,9 @@ export const AuthPage = () => {
     }
     const loginHandler = async () => {
       try {
-          const data = await login(form.email, form.password)
-          auth.login(data.accessToken, data.user.id)
+          const email = form.email
+          const password = form.password
+          await dispatch(login({email: email, password: password})).unwrap()
       }catch (e) {
           message(e.message, 'error')
       }
@@ -42,7 +48,7 @@ export const AuthPage = () => {
   return (
       <div className={'auth-page'}>
          <div className="row">
-             <div className="col s6 offset-s3">
+             <div className="col s12 m10 l6 offset-l3 offset-m1">
                  <h1>Shorten the link</h1>
                  <div className="card grey lighten-5">
                      <div className="card-content black-text">
@@ -60,8 +66,8 @@ export const AuthPage = () => {
                          </div>
                      </div>
                      <div className="card-action buttons">
-                         <button className="btn yellow darken-4" onClick={loginHandler} disabled={loading}>Sign In</button>
-                         <button className="btn teal lighten-1 " onClick={registerHandler} disabled={loading}>Sign Up</button>
+                         <button className="btn yellow darken-4" onClick={loginHandler} disabled={!ready}>Sign In</button>
+                         <button className="btn teal lighten-1 " onClick={registerHandler} disabled={!ready}>Sign Up</button>
                      </div>
                  </div>
              </div>

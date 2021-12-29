@@ -1,0 +1,66 @@
+.modal .closer {
+    color: rgba(0, 0, 0, 0.87) !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+}
+.modal-header {
+    padding-bottom: -2rem;
+}
+.modal-title {
+    margin-top: 1rem !important;
+    margin-left: 1.5rem;
+    color: rgba(0, 0, 0, 0.87);
+}
+.modal-content {
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+.modal-content input {
+    line-height: 3em !important;
+    border-bottom: 1px solid #9e9e9e !important;
+}
+.modal-trigger {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.5rem;
+}
+.modal-trigger i {
+    /*box-sizing: border-box;*/
+    /*margin: .3rem .3rem 0 0;*/
+    /*margin-top: 2px;*/
+    margin-right: .3rem;
+}
+.modal-trigger>span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.5rem;
+}
+.modal-button-text {
+    white-space: nowrap;
+    width: 0;
+    opacity: 0.5;
+    transform: scaleX(0);
+    transition: transform ease-in-out 300ms, width ease-in-out 300ms, opacity ease-in-out 300ms;
+    transform-origin: left;
+    /* hide all text on modal buttons*/
+    /*display: none;*/
+}
+.modal-trigger:hover span {
+    /*width: fit-content;*/
+}
+.modal-trigger:hover .modal-button-text {
+    /*display: block!important;*/
+    white-space: nowrap;
+    width: 4rem;
+    opacity: 1;
+    transform: scaleX(1);
+    /* hide all text on modal buttons*/
+    /*display: none;*/
+}
+

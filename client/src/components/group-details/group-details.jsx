@@ -1,93 +1,67 @@
-import React, {useCallback, useEffect, useState} from 'react'
-import {useHttp, useMessage} from "../../hooks";
+import React from 'react'
+
 import Loader from "../loader";
 import {Link, useHistory, useParams} from "react-router-dom";
-import {GroupService} from '../../services'
+
 import GroupCard from "./group-card";
-import LinksCard from "./links-card";
 import './group-details.css'
+import {useSelector, useDispatch} from "react-redux";
+import {deleteGroup, selectGroupById} from "../../store/group-slice";
+import {selectAllLinks} from "../../store/link-slice";
+import {useMessage, useModal} from "../../hooks";
+import GroupStatistics from "./group-statistics";
 
 
 export const GroupDetails = () => {
-    const {loading} = useHttp()
+    const groupId = useParams().id
+    const dispatch = useDispatch()
     const history = useHistory()
     const message = useMessage()
-    const [group, setGroup] = useState(null)
-    const {getGroupDetails, assignLinkToGroup, withdrawLinkFromGroup} = GroupService()
-    const groupId = useParams().id
+    const allLinks = useSelector(selectAllLinks)
+    const group = useSelector(state => selectGroupById(state, groupId))
 
-    useEffect(async () => {
-        await getGroup()
-    }, [])
-
-    const getGroup = useCallback(async () => {
+    const removeGroup = async () => {
         try {
-            const group = await getGroupDetails(groupId)
-                .catch(error => {
-                    history.push('/uconsole')
-                    message(error.message, 'error')
-                })
-            await setGroup(group)
-
+            history.push('/management')
+            const deleted = await dispatch(deleteGroup(groupId)).unwrap()
+            message(deleted.message, 'success')
         } catch (e) {
-            history.push('/uconsole')
+            history.push('/management')
             message(e.message, 'error')
-            console.log(e)
         }
-
-    }, [])
-
-    const assignLink = useCallback(async (linkId) => {
-        try {
-            // await setProcessing(true)
-            const assignedLink = await assignLinkToGroup(groupId, linkId)
-            message(assignedLink.message, 'success')
-            // await setProcessing(false)
-            await getGroup()
-        } catch (e) {
-            // setProcessing(false)
-            message(e.message, 'warn')
-            console.log(e)
-        }
-    }, [])
-    const withdrawLink = useCallback(async (linkId) => {
-        try {
-            // await setProcessing(true)
-            const assignedLink = await withdrawLinkFromGroup(groupId, linkId)
-            message(assignedLink.message, 'success')
-            // await setProcessing(false)
-            await getGroup()
-        } catch (e) {
-            // setProcessing(false)
-            message(e.message, 'warn')
-            console.log(e)
-        }
-    }, [])
-
-
-    if (loading) {
-        return <Loader/>
     }
     if (!group) {
         return <Loader/>
     }
-    const groupLinks = group ? <GroupCard group={group} withdrawLink={withdrawLink}/> : <Loader />
-    const availableLinks = group ? <LinksCard group={group} assignLink={assignLink}/> : <Loader />
+    const linksToAssign = allLinks.filter(link => !group.links.includes(link._id))
+    const assignedLinks = allLinks.filter(link => group.links.includes(link._id))
+
+    const assignLinksModal = useModal('assign-links', {linksToAssign, hideButtonText: true})
+    const editGroupModal = useModal('edit-group', {id: groupId, hideButtonText: true, focused: true})
+    const deleteWithConfirmation = useModal('confirm-delete', {doubt: removeGroup, tooltipName: 'group', id: `delete-${groupId}`, name: group.name, hideButtonText: true})
+    const addLinkModal = useModal('add', {id: groupId, hideButtonText: true, focused: true})
+    const groupLinks = group ? <GroupCard group={group} assignedLinks={assignedLinks} /> : <Loader />
+
     return (
         <div className="group-details">
-            <Link className={'back-to-console'} to={'/uconsole'}>
+            <Link className={'back-to-console'} to={'/management'}>
                 <i className="material-icons">arrow_back</i>
                 <p> Back to Group list</p>
             </Link>
-            <div className="row">
-                <div className="col s6">
+            <div className="row group-row">
+                <div className="col s12 m12 l6">
                     {groupLinks}
+                    <div className={'button-group'}>
+                        {deleteWithConfirmation}
+                        {assignLinksModal}
+                        {editGroupModal}
+                        {addLinkModal}
+                    </div>
                 </div>
-                <div className="col s6">
-                    {availableLinks}
+                <div className="col s12 m12 l6">
+                    <GroupStatistics assignedLinks={assignedLinks} />
                 </div>
             </div>
-
         </div>
     )
 

@@ -1,12 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useMessage} from "../../hooks";
-import {GroupService} from "../../services";
+import {createGroup} from '../../store/group-slice'
+import {useDispatch} from "react-redux";
+import M from 'materialize-css'
 
-
-export const CreateGroup = (props) => {
-    const {createGroup} = GroupService()
-    const {getUserGroups} = props
-    const [groupName, setGroupName] = useState('')
+export const CreateGroup = () => {
+    const dispatch = useDispatch()
+    const [form, setForm] = useState({
+        name: '',
+        description: ''
+    })
     const message = useMessage()
     const enterPressHandler = async event => {
         if (event.key === 'Enter') {
@@ -15,30 +18,54 @@ export const CreateGroup = (props) => {
     }
     const addGroup = async () => {
         try {
-            const data = await createGroup(groupName)
+            const {name, description} = form
+            const data = await dispatch(createGroup({name, description})).unwrap()
             message(data.message, 'success')
-            setGroupName('')
+            setForm({
+                name: '',
+                description: ''
+            })
             window.M.updateTextFields();
-            await getUserGroups()
-
-            // console.log('Generate data', data)
         } catch (e) {
             message(e.message, 'warn')
             console.log(e)
         }
     }
 
-    const inputHandler = event => {
-        setGroupName(event.target.value)
+    const formHandler = (event) => {
+        setForm({...form, [event.target.name]: event.target.value})
     }
 
+    useEffect(()=>{
+        M.updateTextFields()
+    },[])
     return (
         <>
-            <h2>Create new Group</h2>
+            <h3>Create new Group</h3>
             <div className="input-field">
-                <input type="text" id={'groupName'} value={groupName} onChange={inputHandler}
-                       onKeyPress={enterPressHandler}/>
-                <label htmlFor="{'groupName'}">Enter link</label>
+                <i className="material-icons prefix">title</i>
+                <input type="text"
+                       id={'groupName'}
+                       name={'name'}
+                       value={form.name}
+                       onChange={formHandler}
+                       onKeyPress={enterPressHandler}
+                       placeholder={'Enter group name'}
+                />
+                <label htmlFor="{'groupName'}">Name</label>
+            </div>
+            <div className="input-field">
+                <i className="material-icons prefix">description</i>
+                <textarea
+                    className={'materialize-textarea'}
+                    id={'groupDescription'}
+                    name={'description'}
+                    value={form.description}
+                    onChange={formHandler}
+                    onKeyPress={enterPressHandler}
+                    placeholder={'Enter group description'}
+                />
+                <label htmlFor="{'groupName'}">Description</label>
             </div>
             <div className="buttons">
                 <button className="btn teal lighten-2" onClick={addGroup}>Add Group</button>

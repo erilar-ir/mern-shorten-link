@@ -1,6 +1,15 @@
 .link-card {
 
 }
+
 .link-card .span-link {
     cursor: pointer;
+}
+
+.details-buttons {
+    display: flex;
+}
+
+.details-buttons .btn {
+    margin-right: 10px
 }

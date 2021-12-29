@@ -1,5 +1,7 @@
 const UserModel = require('../models/User')
 const LinkModel = require('../models/Link')
+const ClickCollectionModel = require('../models/ClicksCollection')
+const ClickModel = require('../models/Click')
 const GroupModel = require('../models/Group')
 const bcrypt = require('bcryptjs')
 const uuid = require('uuid')
@@ -55,8 +57,8 @@ class UserService {
         await user.save()
         await LinkModel.updateMany({owner: user._id}, {$unset: {expireAt: 1}})
         await GroupModel.updateMany({owner: user._id}, {$unset: {expireAt: 1}})
-
-
+        await ClickCollectionModel.updateMany({owner: user._id}, {$unset: {expireAt: 1}})
+        await ClickModel.updateMany({owner: user._id}, {$unset: {expireAt: 1}})
     }
 
     async login(email, password) {
@@ -79,12 +81,12 @@ class UserService {
 
     async refresh(refreshToken) {
         if (!refreshToken) {
-            throw ErrorHandler.UnauthorizedError('Not authorized')
+            throw ErrorHandler.UnauthorizedError('Not authorized.' + ' No token.')
         }
         const userData = tokenService.validateRefreshToken(refreshToken)
         const tokenFromDb = await tokenService.findToken(refreshToken)
         if (!userData || !tokenFromDb) {
-            throw ErrorHandler.UnauthorizedError('Not authorized')
+            throw ErrorHandler.UnauthorizedError('Not authorized. ' + 'Wrong token.')
         }
         const user = await UserModel.findById(userData.id)
         return createAndSaveTokens(user)

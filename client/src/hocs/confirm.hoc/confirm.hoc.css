@@ -1,0 +1,8 @@
+.confirm-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.confirm-container button {
+    width: 45%;
+}

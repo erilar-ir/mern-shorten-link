@@ -3,10 +3,10 @@ import {useHttp} from "../hooks";
 export const GroupService = () => {
     const {request} = useHttp()
     const getGroups = async () => {
-        return await request('/api/group/get')
+        return await request('/api/group')
     }
     const getGroupDetails = async (id) => {
-        return await request(`/api/group/get/${id}`)
+        return await request(`/api/group/${id}`)
     }
     const createGroup = async (name) => {
         return await request(`/api/group/create`, 'POST', {name: name})
@@ -14,7 +14,6 @@ export const GroupService = () => {
     const removeGroup = async (id) => {
         return await request(`/api/group/remove/${id}`, 'DELETE')
     }
-
     const assignLinkToGroup = async (groupId, linkId) => {
         return await request(`/api/group/assign`, 'PATCH', {groupId: groupId, linkId: linkId})
     }

@@ -1,0 +1,49 @@
+.link-stats {
+    /*overflow-y: scroll;*/
+    /*overflow-x: hidden;*/
+}
+.link-short {
+    font-size:.9rem;
+    font-weight: 500;
+    margin-bottom: 0;
+    margin-top: 0.2rem;
+}
+.link-title {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.clicks {
+    font-weight: bold;
+}
+
+.clicks span {
+    font-weight: normal;
+    font-size: .8rem;
+    line-height: 1rem;
+    text-transform: uppercase;
+}
+.created {
+    font-weight: normal;
+    font-size: .65rem;
+    line-height: 1.2rem;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+.link-stats-charts {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: end;*/
+    margin-bottom: 0;
+    /*padding-bottom: 1rem;*/
+}
+.link-stats-charts .row {
+    margin-bottom:0;
+}
+.countries-chart {
+    height: 18rem;
+    min-height: 18rem;
+}
+.cities-chart {
+    height: 18rem;
+    min-height: 18rem;
+}

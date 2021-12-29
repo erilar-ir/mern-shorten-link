@@ -1,7 +1,10 @@
 {
   "name": "mern-shorten-link",
-  "version": "1.0.0",
-  "description": "node express mongodb react",
+  "version": "2.0.0",
+  "engines": {
+    "node": "15.x"
+  },
+  "description": "node express mongodb react app for links shortening",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -21,7 +24,7 @@
     "node",
     "mongodb"
   ],
-  "author": "erilar",
+  "author": "erilar.ir",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

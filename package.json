@@ -15,8 +15,7 @@
     "client-dev": "npm run dev --prefix client",
     "dev": "cross-env NODE_ENV=development concurrently \"npm run server \" \"npm run client-dev\"",
     "client:install": "npm install --prefix client",
-    "client:build": "npm run build --prefix client",
-    "build": "npm run client:build"
+    "client:build": "npm run build --prefix client"
   },
   "keywords": [
     "mern",

@@ -84,7 +84,7 @@ export const Header = () => {
             </nav>
             <ul className="sidenav" id="mobile-menu">
                 <li className={split[1] === 'create' ? 'active' : ''}>
-                    <NavLink to={'/create'}><i className={'material-icons left'}>add</i> Create</NavLink>
+                    <NavLink to={'/create'} className={'sidenav-close'}><i className={'material-icons left'}>add</i> Create</NavLink>
                 </li>
                 <li className={split[1] === 'links' ? 'active' : ''}><NavLink className={'sidenav-close'}
                                                                               to={'/links'}>Links</NavLink></li>

@@ -15,7 +15,8 @@
     "client-dev": "npm run dev --prefix client",
     "dev": "cross-env NODE_ENV=development concurrently \"npm run server \" \"npm run client-dev\"",
     "client:install": "npm install --prefix client",
-    "client:build": "npm run build --prefix client"
+    "client:build": "npm run build --prefix client",
+    "updatedb": "dotenv -- cross-var node ./node_modules/geoip-lite/scripts/updatedb.js license_key=%GEOIP_LICENSE%"
   },
   "keywords": [
     "mern",
@@ -33,7 +34,9 @@
     "config": "^3.3.6",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "cross-var": "^1.1.0",
     "dotenv": "^10.0.0",
+    "dotenv-cli": "^4.1.1",
     "express": "^4.17.1",
     "express-validator": "^6.12.1",
     "faker": "^5.5.3",

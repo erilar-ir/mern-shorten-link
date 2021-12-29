@@ -1,0 +1,36 @@
+.one-link-stats {
+    margin-bottom: 0;
+}
+
+.one-link-stats .collection-item {
+    padding: 0;
+    cursor: pointer;
+    transition: background-color .3s;
+}
+
+.one-link-stats .collection-item:hover, .collection-item:focus {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.one-link-stats .collection-item.active:hover, .collection-item.active:focus {
+    background-color: #26a69a;
+}
+
+.one-link-stats .collection-item.active button {
+    color: #fff;
+}
+
+.link-stat-btn {
+    padding: 1.2rem 1.5rem;
+    text-align: left;
+    background: none;
+    box-sizing: border-box;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 1.8rem;
+}
+
+.link-stat-btn:hover, .link-stat-btn:focus {
+    background: none;
+}

@@ -1,7 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&display=swap');
 .header{
-    padding: 0 2rem;
 }
-
-/*.header .brand-logo {*/
-/*    margin-left: 1rem;*/
+.brand-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+    margin: 0 1rem;
+}
+.header nav ul {
+}
+.header nav ul li a {
+    padding-left: 1.5rem;
+}
+.header nav ul li:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.header nav ul a:hover {
+    background-color: rgba(0, 0, 0, 0.0);
+}
+/*.dropdown-content ul{*/
+/*    width: fit-content;*/
 /*}*/
+/*.dropdown-content li {*/
+/*    width: fit-content;*/
+/*}*/
+.dropdown-content li a{
+    white-space: nowrap;
+    text-wrap: none;
+}

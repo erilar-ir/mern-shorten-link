@@ -1,68 +1,29 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React from "react";
 import './details-page.css'
-import {useHistory, useParams} from "react-router-dom";
-import {useHttp, useMessage} from "../../hooks";
-import Loader from "../loader";
+import {useParams} from "react-router-dom";
+
 import LinkCard from "./link-card";
-import {LinksService} from "../../services";
+import {getDetailedClicks, selectLinkById} from '../../store/link-slice'
+import {useDispatch, useSelector} from "react-redux";
 
 export const DetailsPage = () => {
-    const {linkDetails, deleteLink} = LinksService()
-    const {loading} = useHttp()
-    const [link, setLink] = useState(null)
-    const [linkClicks, setLinkClicks] = useState(0)
-    const history = useHistory()
+    const dispatch = useDispatch()
     const linkId = useParams().id
-    const message = useMessage()
-
-    const getLink = useCallback(async () => {
-        try {
-            const link = await linkDetails(linkId)
-                .catch(error => {
-                history.push('/links')
-                message(error.message, 'error')
-            })
-            await setLink(link)
-
-        } catch (e) {
-            history.push('/links')
-            message(e.message, 'error')
-        }
-
-    }, [linkClicks])
-
-    const removeLink = useCallback(async () => {
-        await deleteLink(linkId)
-            .then(
-                data => {
-                    history.push('/links')
-                    message(data.message, 'success')
-                })
-            .catch(e => {
-                console.log(e)
-                message(e.message, 'error')
-            })
-
-    }, [linkId])
+    const link = useSelector(state => selectLinkById(state, linkId))
 
     const openInNewTab = async url => {
-        const newWindow = await window.open(url, '_blank', 'noopener,noreferrer')
+        const newWindow = window.open(url, '_blank', 'noopener noreferrer')
         if (newWindow) newWindow.opener = null
-        await setLinkClicks(linkClicks + 1)
-        await getLink()
+        //there is a spike below before i found how to make clicks ready to be fetched after redirect (now they are updating a little bit later then redux fetching updates)
+        setTimeout(async () => {
+            await dispatch(getDetailedClicks(linkId)).unwrap()
+        }, 1000)
     }
 
-    useEffect(async () => {
-        await getLink()
-    }, [getLink])
-
-    if (loading) {
-        return <Loader/>
-    }
 
     return (
         <>
-            {!loading && link && <LinkCard openInNewTab={openInNewTab} link={link} removeLink={removeLink}/>}
+            {link && <LinkCard openInNewTab={openInNewTab} link={link}/>}
         </>
     )
 }

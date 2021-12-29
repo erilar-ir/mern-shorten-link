@@ -26,7 +26,7 @@ class UserController {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                console.log(errors.array())
+                console.log('Validation error', errors.array())
                 return next(ErrorHandler.BadRequest('Validation error', errors.array()))
             }
             const {email, password} = req.body

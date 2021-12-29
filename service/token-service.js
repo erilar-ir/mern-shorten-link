@@ -3,7 +3,7 @@ const tokenModel = require('../models/Token')
 
 class TokenService {
     generateToken(payload) {
-        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {expiresIn: '30m'})
+        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {expiresIn: '1h'})
         const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {expiresIn: '30d'})
         // console.log('AccessToken: ', accessToken)
         return {
@@ -42,7 +42,7 @@ class TokenService {
 
     async removeToken(refreshToken) {
         const tokenData = await tokenModel.deleteOne({refreshToken})
-        console.log(tokenData)
+        console.log('removed token', tokenData)
         return tokenData
 
     }

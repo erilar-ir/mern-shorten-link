@@ -6,6 +6,7 @@ const app = express()
 const mongoose = require('mongoose')
 const path = require("path");
 const errorMiddleware = require('./middleware/error.middleware');
+const geoip = require("geoip-lite");
 
 
 const PORT = process.env.PORT
@@ -45,7 +46,7 @@ const start = async () => {
             console.log('MongoDB connected')
         })
         app.listen(PORT, () => console.log(`Server is running on ${PORT} port...`))
-
+        geoip.startWatchingDataUpdate()
     } catch (e) {
         console.log('Server Error: ', e.message)
         process.exit(1)

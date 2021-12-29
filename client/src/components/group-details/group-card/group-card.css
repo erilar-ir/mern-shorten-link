@@ -1,16 +1,67 @@
 .group-card{
-
+    box-sizing: border-box;
 }
 .group-links {
     margin-bottom: 2.5rem;
 }
 .group-link {
-    line-height: 2.5rem;
+    /*line-height: 2.5rem;*/
     display: flex;
-    align-items: center;
+    /*align-items: center;*/
     justify-content: left;
-    margin: 5px 10px;
+    /*margin: 5px 10px;*/
 }
-.link-name {
-    margin-left: 10px;
+.links-list card {
+    padding: 0;
+    margin: 0;
+}
+.group-link {
+    position: relative;
+    /*line-height: 2.5rem;*/
+    display: flex;
+    /*align-items: center;*/
+    justify-content: left;
+    /*margin: 5px 10px;*/
+    overflow: hidden;
+}
+.group-link .withdraw-link {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    height:auto;
+}
+.group-link button {
+    margin: 0;
+    position: relative;
+    height:100%;
+    /*top: -5px;*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+}
+.link-names {
+    /*margin: 0;*/
+    /*padding-left: 10px;*/
+    display: flex;
+    flex-direction:column;
+    width: 100%;
+}
+.link-names span {
+    position: relative;
+    padding-left: 10px;
+    font-size: .9rem;
+    line-height: 1.5rem;
+    width:auto;
+    overflow: hidden;
+}
+.link-names .from {
+    font-weight: bold;
+}
+.link-names .from span{
+    font-weight: 500;
+}
+.link-names .to {
+    font-weight: bold;
+}
+.link-names .to span{
+    font-weight: 500;
 }

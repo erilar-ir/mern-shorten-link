@@ -1,0 +1,85 @@
+.links-card {
+    /*padding: 5px 10px;*/
+    box-sizing: border-box;
+}
+.links-list {
+    margin-bottom: 10px;
+}
+.links-list card {
+    padding: 0;
+    margin: 0;
+}
+.link-item {
+    position: relative;
+    /*line-height: 2.5rem;*/
+    display: flex;
+    /*align-items: center;*/
+    justify-content: left;
+    /*margin: 5px 10px;*/
+    overflow: hidden;
+}
+.assign-link-item {
+    position: relative;
+    display: flex;
+    justify-content: left;
+    overflow: hidden;
+}
+.link-item .assign-link {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    height:auto;
+}
+.link-item .edit-link {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    height:inherit;
+}
+.link-item .edit-link a{
+    padding-left: .8rem;
+    padding-right: .4rem;
+    margin: 0;
+    position: relative;
+    height:100%;
+}
+.edit-link>div {
+    height: 100%;
+}
+.link-item button {
+    margin: 0;
+    position: relative;
+    height:100%;
+    /*top: -5px;*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+}
+.link-names {
+    /*margin: 0;*/
+    /*padding-left: 10px;*/
+    display: flex;
+    flex-direction:column;
+    width: available;
+}
+.link-names span {
+    position: relative;
+    padding-left: 10px;
+    font-size: .9rem;
+    line-height: 1.5rem;
+    width:auto;
+    overflow: hidden;
+}
+.link-names .from {
+    font-weight: bold;
+}
+.link-names .from span{
+    font-weight: 500;
+}
+.link-names .to {
+    color:darkslategray;
+    font-weight: 500;
+}
+.link-names .to span{
+    color:grey;
+    font-weight: normal;
+}

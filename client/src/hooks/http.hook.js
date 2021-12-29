@@ -20,7 +20,7 @@ export const useHttp = () => {
         } catch (e) {
             await setLoading(false)
             await setError(e)
-            console.log(e)
+            console.log('http hook error: ',e)
             return Promise.reject(e)
         }
     }, [])

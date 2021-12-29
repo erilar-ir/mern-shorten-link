@@ -4,13 +4,21 @@ const Link = require('../models/Link')
 
 const ErrorHandler = require('../exceptions/error-handler')
 
-class GroupController {
-    async createGroup(req, res) {
+const validateUser = async userId => {
+    const currentUser = await User.findOne({_id: userId})
 
-            const {name} = req.body
-            const currentUser = await User.findOne({_id: req.user.id}).catch(() => {
-                throw ErrorHandler.BadRequest('User lifetime is expired')
-            })
+    if (!currentUser) {
+        throw ErrorHandler.BadRequest('Unactivated user lifetime expired')
+    }
+
+    return currentUser
+}
+
+class GroupController {
+    async createGroup(req, res, next) {
+        try {
+            const {name, description} = req.body
+            const currentUser = await validateUser(req.user.id)
 
             if (name.length === 0) {
                 return res.status(400).json({message: `Group name is required`})
@@ -22,18 +30,37 @@ class GroupController {
             }
 
             const group = new Group({
-                name, owner: req.user.id, expireAt: undefined
+                name, description, owner: req.user.id, expireAt: undefined
             })
             if (!currentUser.isActivated) {
                 group.expireAt = currentUser.expireAt
             }
 
             await group.save()
-            return res.status(201).json({message: `Group ${name} created successfully`})
-
-
+            return res.status(201).json({group, message: `Group ${name} created successfully`})
+        } catch (e) {
+            next(e)
+        }
     }
+    async editGroup(req, res, next) {
+        try {
+            const groupId = req.params.id
+            const {name, description} = req.body
+            await validateUser(req.user.id)
+            const group = await Group.findOne({_id: groupId, owner: req.user.id})
+            if (!group) {
+                throw ErrorHandler.BadRequest('Group not found')
+            }
 
+            group.name = name
+            group.description = description
+
+            group.save()
+            return res.status(201).json({group, message: 'Group updated successfully'})
+        } catch (e) {
+            next(e)
+        }
+    }
     async removeGroup(req, res, next) {
         try {
             const groupId = req.params.id
@@ -43,7 +70,7 @@ class GroupController {
 
             group.remove()
 
-            return res.json({message: `Group ${group.name} has been removed`})
+            return res.json({id: groupId, message: `Group ${group.name} has been removed`})
         } catch (e) {
             next(e)
         }
@@ -52,6 +79,7 @@ class GroupController {
     async getGroups(req, res, next) {
         try {
             const groups = await Group.find({owner: req.user.id})
+                // .populate('links')
             return res.json(groups)
         } catch (e) {
             next(e)
@@ -61,7 +89,8 @@ class GroupController {
         try {
             const groupId = req.params.id
             const user = req.user.id
-            const group = await Group.findOne({_id: groupId, owner: user}).populate('links')
+            const group = await Group.findOne({_id: groupId, owner: user})
+                // .populate('links')
             return res.json(group)
         } catch (e) {
             next(e)
@@ -81,9 +110,8 @@ class GroupController {
             }
 
             group.links.push(linkId)
-
             group.save()
-            res.status(201).json({message: `Link ${link.to} assigned to ${group.name}`})
+            res.status(201).json({groupName: group.name, message: `Link ${link.to} assigned to ${group.name}`})
         } catch (e) {
             console.log(e)
             next(e)
@@ -102,7 +130,6 @@ class GroupController {
             }
 
             group.links = group.links.filter(link => link.toString() !== linkId)
-
             group.save()
             res.status(201).json({message: `Link ${link.to} withdrawn from ${group.name} `})
 

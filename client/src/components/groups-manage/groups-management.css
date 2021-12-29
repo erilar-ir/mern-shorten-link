@@ -1,0 +1,33 @@
+.group-list {
+    position: relative;
+    /*width: 80%;*/
+}
+@media (min-width: 768px) {
+
+}
+
+.group-item {
+    height: 2.7rem;
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
+    margin-bottom: 5px;
+}
+
+.group-name {
+    position: relative;
+    height: fit-content;
+    /*width: 70%;*/
+}
+
+.group-tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    /*margin-left: 20px;*/
+}
+.group-tools button {
+    margin-right: 5px;
+}

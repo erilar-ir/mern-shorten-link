@@ -34,7 +34,7 @@ export const Header = () => {
         return (
             <div className="header">
                 <ul id="account-dropdown" className="dropdown-content">
-                    <li><NavLink to={'/auth'}>Sign In | Sign Up</NavLink></li>
+                    <li><NavLink to={'/auth'} className={'sidenav-close'}>Sign In | Sign Up</NavLink></li>
                 </ul>
                 <nav>
                     <div className="nav-wrapper header teal lighten-1">

@@ -60,7 +60,6 @@ export const useModal = (type = 'add', options = {}) => {
             modalButtonClass= 'edit-group orange lighten-2'
             tooltipText = 'Edit this group'
             modalContainerClass = 'edit-group-c'
-            // focusedInput = options.focused ? focusedInput : null
             break
         case 'confirm-delete':
             modalButton = modalButtonConstructor('delete', 'Delete')

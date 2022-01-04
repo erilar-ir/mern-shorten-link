@@ -46,7 +46,10 @@ const start = async () => {
             console.log('MongoDB connected')
         })
         app.listen(PORT, () => console.log(`Server is running on ${PORT} port...`))
-        geoip.startWatchingDataUpdate()
+
+        geoip.startWatchingDataUpdate();
+
+
     } catch (e) {
         console.log('Server Error: ', e.message)
         process.exit(1)

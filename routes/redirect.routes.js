@@ -59,6 +59,10 @@ router.get('/:code', async (req, res, next) => {
             if (!ipInfo.city) {
                 ipInfo.city = 'Not defined'
             }
+            //Added spike solution because free version of geo-ip does not recognize city of some IPs given by mobile network (mobile network tested only in Ukraine)
+            if (ipInfo.country === 'UA' && !ipInfo.city) {
+                ipInfo.city = 'Kyiv'
+            }
             click.clientIp = clientIp
             click.country = ipInfo.country
             click.city = ipInfo.city

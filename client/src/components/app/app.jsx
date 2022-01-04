@@ -103,3 +103,4 @@ export default App
 
 //todo 6. Add Welcome page for unauthorized users. (Done dummy page creation)
 //todo 11. Improve Url validation before short link generation
+//todo 17. Make link title required and add title autocreate if not defined by user

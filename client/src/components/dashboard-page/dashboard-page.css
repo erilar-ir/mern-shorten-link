@@ -18,7 +18,14 @@
         max-height: calc(100vh - 64px);
     }
 }
-
+.empty .container {
+    /*width: 100%;*/
+    height:25%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 .dashboard-page .individual-stats{
     margin-bottom: 0;
 }

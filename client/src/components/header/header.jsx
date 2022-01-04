@@ -33,9 +33,6 @@ export const Header = () => {
     if (!isAuthenticated) {
         return (
             <div className="header">
-                <ul id="account-dropdown" className="dropdown-content">
-                    <li><NavLink to={'/auth'} className={'sidenav-close'}>Sign In | Sign Up</NavLink></li>
-                </ul>
                 <nav>
                     <div className="nav-wrapper header teal lighten-1">
                     <span className={` brand-logo ${split[1] === '' ? 'active' : ''}`}><NavLink
@@ -44,14 +41,15 @@ export const Header = () => {
                             className="material-icons">menu</i></a>
                         <ul id="nav-mobile" className="right hide-on-med-and-down">
                             <li className={split[1] === 'auth' ? 'active' : ''}>
-                                <a className="dropdown-trigger" data-target="account-dropdown"><i
-                                    className={'material-icons'}>account_circle</i></a>
+                                <NavLink to={'/auth'}>
+                                    <i className={'material-icons left'}>account_circle</i>Sign In | Sign Up
+                                </NavLink>
                             </li>
                         </ul>
                     </div>
                 </nav>
                 <ul className="sidenav" id="mobile-menu">
-                    <li className={split[1] === 'auth' ? 'active' : ''}><NavLink to={'/auth'}><i
+                    <li className={split[1] === 'auth' ? 'active' : ''}><NavLink to={'/auth'} className={'sidenav-close'}><i
                         className={'material-icons'}>account_circle</i>Login /
                         Register</NavLink></li>
                 </ul>
@@ -61,7 +59,8 @@ export const Header = () => {
     return (
         <div className={'header'}>
             <ul id="account-dropdown" className="dropdown-content">
-                <li><a href="/" onClick={logoutHandler}>Logout</a></li>
+                <li><a href="/" onClick={logoutHandler}><i
+                    className="material-icons left">exit_to_app</i>Logout</a></li>
             </ul>
             <nav>
                 <div className="nav-wrapper teal lighten-1">

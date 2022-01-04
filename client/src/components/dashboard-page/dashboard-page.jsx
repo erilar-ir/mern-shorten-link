@@ -31,7 +31,15 @@ export const DashboardPage = () => {
         return <Loader/>
     }
     if (linkList.length === 0) {
-        return <p>To view dashboard and statistics make some links with clicks</p>
+
+        return (
+            <div className="dashboard-page empty">
+                <div className="container center-align">
+                    <i className={'medium material-icons grey-text'}>insert_chart</i>
+                    <p className={''}>To view dashboard and statistics make some links with clicks</p>
+                </div>
+            </div>
+        )
     }
     const getDashboardData = async () => {
         try {

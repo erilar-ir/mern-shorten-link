@@ -24,7 +24,7 @@ export const GroupItem = ({group}) => {
             message(e.message, 'error')
         }
     }
-    const deleteWithConfirmation = useModal('confirm-delete', {doubt: removeGroup, tooltipName: 'Group', id: group._id, hideButtonText: true})
+    const deleteWithConfirmation = useModal('confirm-delete', {doubt: removeGroup, tooltipName: 'group', id: group._id, name: group.name, hideButtonText: true})
     useEffect(() => {
         M.Tooltip.init(tooltip.current)
     }, [])

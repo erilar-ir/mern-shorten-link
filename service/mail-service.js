@@ -18,7 +18,7 @@ class MailService {
         this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to: to,
-            subject: 'Account activation at ' + process.env.API_URL,
+            subject: 'Account activation at ' + process.env.CLIENT_URL,
             text: '',
             html:
                 `

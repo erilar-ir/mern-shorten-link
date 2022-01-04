@@ -49,6 +49,9 @@ export const WelcomePage = () => {
                             There is also beautiful custom Hook with HOC for modal buttons, allows me to easily use
                             proper modal with needed component anywhere in app with a single line of code.
                         </p>
+                        <p className="flow-text">
+                            For the awesome bots thanks to <a className={'teal-text'} href={'https://www.freepik.com/upklyak'}  rel={'noopener noreferrer'}>upklyak from www.freepik.com</a>
+                        </p>
                     </div>
                 </div>
                 <div className="fixed-action-btn direction-top active">

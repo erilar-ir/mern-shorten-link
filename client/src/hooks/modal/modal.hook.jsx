@@ -1,11 +1,10 @@
 import React from 'react'
 import './modal.hook.css'
-import withModal from "../../hocs/modal.hoc";
+import {withModal, withConfirm} from "../../hocs";
 import GenerateLinkForm from "../../components/create-page/generate-link-form";
 import EditLinkForm from "../../components/edit-link-form";
 import AssignLinksCard from "../../components/group-details/assign-links-card";
 import EditGroupForm from "../../components/edit-group-form";
-import withConfirm from "../../hocs/confirm.hoc";
 
 export const useModal = (type = 'add', options = {}) => {
     let modalButton
@@ -14,7 +13,6 @@ export const useModal = (type = 'add', options = {}) => {
     let modalButtonClass
     let tooltipText
     let modalContainerClass
-    // let focusedInput = React.createRef()
     const modalMode = true
     const modalButtonConstructor = (icon, text) => {
         return(

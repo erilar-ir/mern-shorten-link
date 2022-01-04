@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
-import $api from "../services/api.service";
+import $api from "../services";
 
 const storageName = 'userData'
 

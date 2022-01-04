@@ -1,5 +1,5 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
-import $api from "../services/api.service";
+import $api from "../services";
 import {logout} from './auth-slice'
 
 export const processRejectedRequest = async (e, thunkAPI) => {

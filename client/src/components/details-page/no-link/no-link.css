@@ -1,16 +1,14 @@
-.error-view {
+.no-link {
+    margin-top: 3rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: auto;
-    gap: 0.5rem;
-    margin-top: 3rem;
-    /*margin-bottom: 1.5em;*/
 }
 .bot-img {
-    height: 12rem;
     max-height: 15rem;
     max-width: 15rem;
+}
+.action-button {
+    margin-top: 2rem;
 }

@@ -136,15 +136,10 @@ class LinkController {
             const {from, title} = req.body
             const validExistingUrl = await validateUrl(from)
             const metaResult = await parser(validExistingUrl)
-                .catch(err => {
-                    if(err.response && err.response.status === 404) {
-                        throw ErrorHandler.BadRequest(`URL is not responding`, [{status: err.response.status, message: err.response.message}])
-                    }
-                })
             const currentUser = await validateUser(req.user.id)
             const existingLink = await Link.findOne({from, owner: req.user.id})
-
-            if (existingLink) {
+            const existingValidUrl = await Link.findOne({from: validExistingUrl, owner: req.user.id})
+            if (existingLink || existingValidUrl) {
                 throw ErrorHandler.BadRequest(`You have already created short url for ${existingLink.from}`)
             }
 

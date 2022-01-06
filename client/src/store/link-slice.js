@@ -68,6 +68,7 @@ const initialState = {
     links: [],
     status: 'idle',
     error: null,
+    addingLinkStatus: false,
     statistics: null,
     statisticsStatus: 'idle',
     linkStatisticsStatus: 'idle',
@@ -77,21 +78,8 @@ const initialState = {
 const linkSlice = createSlice({
     name: 'links',
     initialState,
-    reducers: {
-        // setLinksStatus: {
-        //     reducer(state, action) {
-        //         state.status = action.payload
-        //     }
-        // },
-        // updateLinkClicksCount: {
-        //     reducer(state, action) {
-        //         const linkIndex = state.links.findIndex(link => link._id === action.payload)
-        //         const updatedLink = state.links[linkIndex]
-        //         updatedLink.clicks++
-        //         state.links[index] = updatedLink
-        //     }
-        // }
-    }, extraReducers(builder) {
+    reducers: { },
+    extraReducers(builder) {
         builder
             .addCase(getLinks.pending, (state) => {
                 state.status = 'loading'
@@ -104,15 +92,20 @@ const linkSlice = createSlice({
                 state.status = 'failed'
                 state.error = action.payload
             })
+            .addCase(addLink.pending, (state, action) => {
+                state.addingLinkStatus = true
+            })
             .addCase(addLink.fulfilled, (state, action) => {
                 const existingLink = state.links.find(link => link._id === action.payload.link._id)
                 if (!existingLink) {
                     state.links.push(action.payload.link)
                 }
+                state.addingLinkStatus = false
             })
             .addCase(addLink.rejected, (state, action) => {
-                console.log('addlink rejected', action)
+                // console.log('addlink rejected', action)
                 state.error = action.payload
+                state.addingLinkStatus = false
             })
             .addCase(deleteLink.fulfilled, (state, action) => {
                 const linkId = action.payload.id
@@ -175,6 +168,7 @@ export default linkSlice.reducer
 export const selectAllLinks = state => state.links.links
 export const selectAllClickedLinks = state => state.links.links.filter(link => link.clicks > 0)
 export const linksSliceStatus = state => state.links.status
+export const addingLinkStatus = state => state.links.addingLinkStatus
 export const selectStatsStatus = state => state.links.statisticsStatus
 export const selectLinkStatisticsStatus = state => state.links.linkStatisticsStatus
 export const selectDashBoardStats = state => state.links.statistics

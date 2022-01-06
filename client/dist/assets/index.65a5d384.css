@@ -9255,6 +9255,10 @@ main {
 .confirm-container button {
     width: 45%;
 }
+.helper-text {
+    margin-top: -.5rem;
+    line-height: 2rem !important;
+}
 .links-card {
     /*padding: 5px 10px;*/
     box-sizing: border-box;

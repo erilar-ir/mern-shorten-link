@@ -118,7 +118,6 @@ $api.interceptors.response.use((config) => {
       return Promise.reject(error2);
     }
   }
-  console.log("error response data ", error.response.data);
   const err = error.response.data;
   return Promise.reject(err);
 });
@@ -298,6 +297,7 @@ const initialState$1 = {
   links: [],
   status: "idle",
   error: null,
+  addingLinkStatus: false,
   statistics: null,
   statisticsStatus: "idle",
   linkStatisticsStatus: "idle",
@@ -316,14 +316,17 @@ const linkSlice = createSlice({
     }).addCase(getLinks.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.payload;
+    }).addCase(addLink.pending, (state, action) => {
+      state.addingLinkStatus = true;
     }).addCase(addLink.fulfilled, (state, action) => {
       const existingLink = state.links.find((link) => link._id === action.payload.link._id);
       if (!existingLink) {
         state.links.push(action.payload.link);
       }
+      state.addingLinkStatus = false;
     }).addCase(addLink.rejected, (state, action) => {
-      console.log("addlink rejected", action);
       state.error = action.payload;
+      state.addingLinkStatus = false;
     }).addCase(deleteLink.fulfilled, (state, action) => {
       const linkId = action.payload.id;
       state.links = state.links.filter((link) => link._id !== linkId);
@@ -368,6 +371,7 @@ var linksReducer = linkSlice.reducer;
 const selectAllLinks = (state) => state.links.links;
 const selectAllClickedLinks = (state) => state.links.links.filter((link) => link.clicks > 0);
 const linksSliceStatus = (state) => state.links.status;
+const addingLinkStatus = (state) => state.links.addingLinkStatus;
 const selectStatsStatus = (state) => state.links.statisticsStatus;
 const selectLinkStatisticsStatus = (state) => state.links.linkStatisticsStatus;
 const selectDashBoardStats = (state) => state.links.statistics;
@@ -9587,17 +9591,17 @@ const WelcomePage = () => {
     rel: "noopener noreferrer"
   }, "Ivan Rudiuk"), "and it's my pet project."), /* @__PURE__ */ React.createElement("p", {
     className: "flow-text"
-  }, "The purpose of this app is to let user to create short links for web URLs, collect statistics on this short links clicks and provide some analytics to user about their short links (like popular ", /* @__PURE__ */ React.createElement("strong", null, "bit.ly"), " or ", /* @__PURE__ */ React.createElement("strong", null, "cutt.ly"), " services). It's quite useful for marketing purposes i think."), /* @__PURE__ */ React.createElement("p", {
+  }, "The purpose of this app is to create short links for web URLs, collect clicks statistics and provide some analytics to user about their short links (like popular ", /* @__PURE__ */ React.createElement("strong", null, "bit.ly"), " or ", /* @__PURE__ */ React.createElement("strong", null, "cutt.ly"), " services). It's quite useful for marketing purposes i think."), /* @__PURE__ */ React.createElement("p", {
     className: "flow-text"
   }, "This project was created for educational purposes with intention to learn React and MERN stack and have a fun with programming."), /* @__PURE__ */ React.createElement("p", {
     className: "flow-text"
-  }, "It uses Node.js and Express.js to run everything on server side. There is custom authorization logic realized with access and refresh tokens to keep user logged in safely."), /* @__PURE__ */ React.createElement("p", {
+  }, "It uses Node.js and Express.js to run everything on server side. Cloud MongoDB used as database. There is custom authorization logic with access and refresh tokens to keep user logged in safely."), /* @__PURE__ */ React.createElement("p", {
     className: "flow-text"
-  }, "Client app created using React framework. I use Redux as a state management system. For UI components there is Materialize framework used."), /* @__PURE__ */ React.createElement("p", {
+  }, "Client app created using React framework. Redux used for state management on client side here. For UI components there is Materialize framework used."), /* @__PURE__ */ React.createElement("p", {
     className: "flow-text"
   }, "For dashboards and chart components i use here Chart.js library with react-chartjs-2 components library. Most of charts data prepared on server side and transfer to client only clean data to visualize on charts."), /* @__PURE__ */ React.createElement("p", {
     className: "flow-text"
-  }, "There is also beautiful custom Hook with HOC for modal buttons, allows me to easily use proper modal with needed component anywhere in app with a single line of code."), /* @__PURE__ */ React.createElement("p", {
+  }, "There is also custom Hooks with HOC created for modal views, allows me to easily use proper modal with needed component anywhere in app with a few lines of code."), /* @__PURE__ */ React.createElement("p", {
     className: "flow-text"
   }, "For the awesome bots thanks to ", /* @__PURE__ */ React.createElement("a", {
     className: "teal-text",
@@ -9787,16 +9791,19 @@ const withConfirm = (props) => {
     onClick: closeModal
   }, "No"));
 };
+var generateLinkForm = ".helper-text {\r\n    margin-top: -.5rem;\r\n    line-height: 2rem !important;\r\n}\r\n";
 const noop$2 = () => {
 };
 const GenerateLinkForm = ({ modalMode = false, closeModal = noop$2, id: groupId = null, focusedInput = null }) => {
   const dispatch = useDispatch();
   const message = useMessage();
   const history2 = useHistory();
+  const selectAddingLinkStatus = useSelector(addingLinkStatus);
   const [form, setForm] = react.exports.useState({
     link: "",
     title: ""
   });
+  const [formError, setFormError] = react.exports.useState(null);
   const formHandler = (event) => {
     setForm(__spreadProps(__spreadValues({}, form), { [event.target.name]: event.target.value }));
   };
@@ -9818,7 +9825,9 @@ const GenerateLinkForm = ({ modalMode = false, closeModal = noop$2, id: groupId 
       if (modalMode) {
         closeModal();
       }
+      setFormError(null);
     } catch (e) {
+      setFormError(e.message);
       message(e.message, "warn");
     }
   };
@@ -9829,13 +9838,16 @@ const GenerateLinkForm = ({ modalMode = false, closeModal = noop$2, id: groupId 
   };
   react.exports.useEffect(() => {
     M.updateTextFields();
-  }, []);
+  }, [formError]);
+  if (selectAddingLinkStatus) {
+    return /* @__PURE__ */ React.createElement(Loader, null);
+  }
   return /* @__PURE__ */ React.createElement("div", {
     className: "generate-link-form"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "input-field"
   }, /* @__PURE__ */ React.createElement("i", {
-    className: "material-icons prefix"
+    className: `material-icons prefix ${formError && "red-text"}`
   }, "link"), /* @__PURE__ */ React.createElement("input", {
     ref: focusedInput ? focusedInput : null,
     type: "text",
@@ -9844,10 +9856,14 @@ const GenerateLinkForm = ({ modalMode = false, closeModal = noop$2, id: groupId 
     value: form.link,
     onChange: formHandler,
     onKeyPress: enterPressHandler,
-    placeholder: "Enter long url like https://www.google.com"
+    placeholder: "Enter long url like https://www.google.com",
+    className: formError && "invalid"
   }), /* @__PURE__ */ React.createElement("label", {
     htmlFor: "{'link'}"
-  }, "Url")), /* @__PURE__ */ React.createElement("div", {
+  }, "Url"), formError && /* @__PURE__ */ React.createElement("span", {
+    className: "helper-text",
+    "data-error": formError
+  }, "Helper text")), /* @__PURE__ */ React.createElement("div", {
     className: "input-field"
   }, /* @__PURE__ */ React.createElement("i", {
     className: "material-icons prefix"
@@ -10291,7 +10307,6 @@ const DetailsPage = () => {
   const dispatch = useDispatch();
   const linkId = useParams().id;
   const link = useSelector((state) => selectLinkById(state, linkId));
-  console.log(link);
   const openInNewTab = async (url) => {
     const newWindow = window.open(url, "_blank", "noopener noreferrer");
     if (newWindow)

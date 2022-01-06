@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {useMessage} from "../../../hooks";
-import {useDispatch} from "react-redux";
-import {addLink,} from "../../../store/link-slice";
+import {useDispatch, useSelector} from "react-redux";
+import {addingLinkStatus, addLink} from "../../../store/link-slice";
 import {useHistory} from "react-router-dom";
 import M from 'materialize-css'
 import {assignLinkToGroup} from "../../../store/group-slice";
+import Loader from "../../loader";
+import './generate-link-form.css'
 
 const noop = () => {
 }
@@ -13,10 +15,12 @@ export const GenerateLinkForm = ({modalMode = false, closeModal = noop, id: grou
     const dispatch = useDispatch()
     const message = useMessage()
     const history = useHistory()
+    const selectAddingLinkStatus = useSelector(addingLinkStatus)
     const [form, setForm] = useState({
         link: '',
         title: ''
     })
+    const [formError, setFormError] = useState(null)
 
 
     const formHandler = event => {
@@ -41,8 +45,9 @@ export const GenerateLinkForm = ({modalMode = false, closeModal = noop, id: grou
             if (modalMode) {
                 closeModal()
             }
-
+            setFormError(null)
         } catch (e) {
+            setFormError(e.message)
             message(e.message, 'warn')
         }
     }
@@ -54,11 +59,14 @@ export const GenerateLinkForm = ({modalMode = false, closeModal = noop, id: grou
     }
     useEffect(() => {
         M.updateTextFields()
-    }, [])
+    }, [formError])
+    if (selectAddingLinkStatus) {
+        return <Loader />
+    }
     return (
         <div className={'generate-link-form'}>
             <div className="input-field">
-                <i className="material-icons prefix">link</i>
+                <i className={`material-icons prefix ${formError && 'red-text'}`}>link</i>
                 <input
                     ref={focusedInput ? focusedInput : null}
                     type="text"
@@ -68,8 +76,10 @@ export const GenerateLinkForm = ({modalMode = false, closeModal = noop, id: grou
                     onChange={formHandler}
                     onKeyPress={enterPressHandler}
                     placeholder={'Enter long url like https://www.google.com'}
+                    className={formError && 'invalid'}
                 />
                 <label htmlFor="{'link'}">Url</label>
+                {formError && <span className="helper-text" data-error={formError}>Helper text</span>}
             </div>
             <div className="input-field">
                 <i className="material-icons prefix">title</i>

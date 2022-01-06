@@ -11,7 +11,7 @@ export const DetailsPage = () => {
     const dispatch = useDispatch()
     const linkId = useParams().id
     const link = useSelector(state => selectLinkById(state, linkId))
-    console.log(link)
+    // console.log(link)
     const openInNewTab = async url => {
         const newWindow = window.open(url, '_blank', 'noopener noreferrer')
         if (newWindow) newWindow.opener = null

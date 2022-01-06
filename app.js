@@ -5,8 +5,8 @@ const cookieParser = require('cookie-parser')
 const app = express()
 const mongoose = require('mongoose')
 const path = require("path");
-const errorMiddleware = require('./middleware/error.middleware');
 const geoip = require("geoip-lite");
+const errorMiddleware = require('./middleware/error.middleware');
 
 
 const PORT = process.env.PORT

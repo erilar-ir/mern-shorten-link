@@ -23,8 +23,8 @@ export const WelcomePage = () => {
                             is <a className={'teal-text'} href={"https://github.com/erilar-ir"} target="_blank"
                                   rel={'noopener noreferrer'}>Ivan Rudiuk</a>and it's
                             my pet project.</p>
-                        <p className={'flow-text'}>The purpose of this app is to let user to create short links for web
-                            URLs, collect statistics on this short links clicks and provide some analytics to user about
+                        <p className={'flow-text'}>The purpose of this app is to create short links for web
+                            URLs, collect clicks statistics and provide some analytics to user about
                             their short links (like
                             popular <strong>bit.ly</strong> or <strong>cutt.ly</strong> services). It's quite useful for
                             marketing purposes i think.</p>
@@ -33,11 +33,11 @@ export const WelcomePage = () => {
                             MERN stack and have a fun with programming.
                         </p>
                         <p className="flow-text">
-                            It uses Node.js and Express.js to run everything on server side. There is custom
-                            authorization logic realized with access and refresh tokens to keep user logged in safely.
+                            It uses Node.js and Express.js to run everything on server side. Cloud MongoDB used as database. There is custom
+                            authorization logic with access and refresh tokens to keep user logged in safely.
                         </p>
                         <p className="flow-text">
-                            Client app created using React framework. I use Redux as a state management system. For UI components there is
+                            Client app created using React framework. Redux used for state management on client side here. For UI components there is
                             Materialize framework used.
                         </p>
                         <p className="flow-text">
@@ -46,8 +46,8 @@ export const WelcomePage = () => {
                             clean data to visualize on charts.
                         </p>
                         <p className="flow-text">
-                            There is also beautiful custom Hook with HOC for modal buttons, allows me to easily use
-                            proper modal with needed component anywhere in app with a single line of code.
+                            There is also custom Hooks with HOC created for modal views, allows me to easily use
+                            proper modal with needed component anywhere in app with a few lines of code.
                         </p>
                         <p className="flow-text">
                             For the awesome bots thanks to <a className={'teal-text'} href={'https://www.freepik.com/upklyak'}  rel={'noopener noreferrer'}>upklyak from www.freepik.com</a>

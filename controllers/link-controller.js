@@ -1,7 +1,8 @@
 const config = require('config')
 const User = require('../models/User')
 const shortid = require('shortid')
-const validUri = require('valid-url')
+const urlExist = require('url-exist')
+const { parser } = require('html-metadata-parser')
 const Link = require('../models/Link')
 const Click = require('../models/Click')
 const ClicksCollection = require('../models/ClicksCollection')
@@ -18,21 +19,24 @@ if (process.env.NODE_ENV === 'development') {
     baseUrl = config.get('baseUrl')
 }
 
-const validateUrl = (from) => {
+const validateUrl = async (from) => {
     if (from.length === 0) {
         throw ErrorHandler.BadRequest('Link can not be empty')
     }
-    if (!validUri.isWebUri(from)) {
-        throw ErrorHandler.BadRequest(`${from} is not valid url`)
+    let url = from.toString().toLowerCase()
+    let existUri = await urlExist(url)
+    if (!existUri) {
+        url = `https://${url}`
+        existUri = await urlExist(url)
+        if (!existUri) throw ErrorHandler.BadRequest(`${from} is not valid url`)
     }
+    return url
 }
 const validateUser = async userId => {
     const currentUser = await User.findOne({_id: userId})
-
     if (!currentUser) {
         throw ErrorHandler.BadRequest('Unactivated user lifetime expired')
     }
-
     return currentUser
 }
 const getDates = (startDate, endDate) => {
@@ -130,9 +134,14 @@ class LinkController {
     async generate(req, res, next) {
         try {
             const {from, title} = req.body
-            validateUrl(from)
+            const validExistingUrl = await validateUrl(from)
+            const metaResult = await parser(validExistingUrl)
+                .catch(err => {
+                    if(err.response && err.response.status === 404) {
+                        throw ErrorHandler.BadRequest(`URL is not responding`, [{status: err.response.status, message: err.response.message}])
+                    }
+                })
             const currentUser = await validateUser(req.user.id)
-
             const existingLink = await Link.findOne({from, owner: req.user.id})
 
             if (existingLink) {
@@ -140,11 +149,18 @@ class LinkController {
             }
 
             const code = shortid.generate()
-
             const to = baseUrl + '/t/' + code
+            let customTitle = title
+            if (!title) {
+                if (metaResult.meta.title) {
+                    customTitle = metaResult.meta.title
 
+                } else {
+                    customTitle = `${validExistingUrl} - #${code}`
+                }
+            }
             const link = new Link({
-                code, to, from, title, owner: req.user.id, expireAt: undefined
+                code, to, from: validExistingUrl, title: customTitle, owner: req.user.id, expireAt: undefined
             })
 
             if (!currentUser.isActivated) {
@@ -156,6 +172,7 @@ class LinkController {
             return res.status(201).json({link})
         } catch (e) {
             if (e.message) {
+                // console.log(e.message)
                 next(e)
             } else {
                 e.message = 'Something went wrong, try again later'
@@ -268,7 +285,7 @@ class LinkController {
             const startDate = period === 30 ? endDate.clone().subtract(1, "months").startOf('day') : endDate.clone().subtract(period, "days").startOf('day')
             const xDates = getDates(startDate, endDate)
 
-            const detailedLinks = await Link.find({owner: req.user.id, clicks: {$gte: 0}})
+            const detailedLinks = await Link.find({owner: req.user.id, clicks: {$gt: 0}, clicksCollection: { $ne: null }})
                 .populate({
                     path: 'clicksCollection',
                     select: 'clicks',

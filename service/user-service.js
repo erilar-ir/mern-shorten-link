@@ -36,7 +36,9 @@ class UserService {
             console.log(expireDate)
             const user = await UserModel.create({email, password: hashPassword, activationLink, expireAt: expireDate})
 
-            await mailService.sendActivationMail(email, `${process.env.BASE_URL}/api/auth/activate/${activationLink}`)
+            // First way to send via SMTP
+            // await mailService.sendActivationMail(email, `${process.env.BASE_URL}/api/auth/activate/${activationLink}`)
+            await mailService.sendAxiosMail(email, `${process.env.BASE_URL}/api/auth/activate/${activationLink}`)
 
             return createAndSaveTokens(user)
 

@@ -89,7 +89,7 @@ export const DashboardPage = () => {
                 </div>
                 <div className={'col s12 m12 l10'}>
                     <ErrorBoundary>
-                        {statisticsStatus === 'loading' ? <Loader/> : <GlobalChart data={data}/>}
+                        {statisticsStatus === 'loading' ? <Loader/> : <GlobalChart data={data} chartMax={dashBoardChartData.chartMax}/>}
                     </ErrorBoundary>
                 </div>
             </div>

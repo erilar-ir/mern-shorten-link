@@ -28,7 +28,7 @@ ChartJS.register(
     Legend
 );
 
-export const GlobalChart = ({data = null}) => {
+export const GlobalChart = ({data = null, chartMax = 1000}) => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -51,7 +51,7 @@ export const GlobalChart = ({data = null}) => {
                 startFromZero: true,
                 stacked: true,
                 min: 0,
-                suggestedMax: 50,
+                suggestedMax: chartMax,
                 ticks: {
                     // forces step size to be 50 units
                     stepSize: 10

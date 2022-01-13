@@ -114,9 +114,24 @@ const prepareDashboardData = (linkList, xDates) => {
         })
 
     })
+
+    let datasetsMax = 0
+    let summaryData = [...noClicksArray]
+    datasets.forEach(({data}) => {
+        data.forEach((el, index) => {
+            summaryData[index] = summaryData[index] + el
+        })
+    })
+    summaryData.forEach(sumEl => {
+        if (datasetsMax < sumEl) {
+            datasetsMax = sumEl
+        }
+    })
+    const chartMax = Math.round(datasetsMax * 1.2)
     const dashBoardChartData = {
         labels,
-        datasets
+        datasets,
+        chartMax
     }
     const topPerformersData = {
         topCity,
@@ -140,7 +155,7 @@ class LinkController {
             const existingLink = await Link.findOne({from, owner: req.user.id})
             const existingValidUrl = await Link.findOne({from: validExistingUrl, owner: req.user.id})
             if (existingLink || existingValidUrl) {
-                throw ErrorHandler.BadRequest(`You have already created short url for ${existingLink.from}`)
+                throw ErrorHandler.BadRequest(`You have already created short url for ${existingLink ? existingLink.from : existingValidUrl.from}`)
             }
 
             const code = shortid.generate()

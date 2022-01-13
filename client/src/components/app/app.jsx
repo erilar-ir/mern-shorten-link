@@ -12,7 +12,6 @@ import {getGroups, selectGroupSliceStatus} from '../../store/group-slice'
 import {checkAuth, clearError, selectAuthReady, selectAuthStatus, selectIsAuthenticated} from '../../store/auth-slice'
 import ErrorBoundary from "../error-boundary";
 
-
 const storageName = 'userData'
 
 function App() {

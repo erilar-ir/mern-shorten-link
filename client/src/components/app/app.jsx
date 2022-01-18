@@ -60,7 +60,7 @@ function App() {
 
     }, [authStatus])
 
-    if (!ready || linksStatus === 'loading' || groupsStatus === 'loading') {
+    if (!ready  || linksStatus === 'loading' || groupsStatus === 'loading') {
         return <Loader/>
     }
 
@@ -70,10 +70,7 @@ function App() {
             <ErrorBoundary>
                 {routes}
             </ErrorBoundary>
-
         </Router>
-
-
     )
 }
 

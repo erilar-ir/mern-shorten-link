@@ -64,11 +64,12 @@ export const WelcomePage = () => {
                     </div>
                 </div>
                 <div className="fixed-action-btn direction-top active">
-                    <a id="info" className="waves-effect waves-light btn-large btn-floating pulse teal lighten-1"
+                    <a id="welcome-info"
+                       className="waves-effect waves-light btn-large btn-floating pulse teal lighten-1"
                        onClick={openInfo}><i
                         className="material-icons">info_outline</i></a>
                 </div>
-                <div className="tap-target teal lighten-1" ref={infoRef} data-target="info">
+                <div className="tap-target teal lighten-1" ref={infoRef} data-target="welcome-info">
                     <div className="tap-target-content white-text">
                         <h5 className={'hide-on-small-and-down show-on-medium-and-up'}>Info Tip</h5>
                         <p>To use all features of this app please Sign

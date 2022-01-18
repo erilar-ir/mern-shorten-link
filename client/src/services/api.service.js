@@ -41,6 +41,7 @@ $api.interceptors.response.use((config) => {
     }
     // console.log('error response data ', error.response.data)
     const err = error.response.data
+    err.status = error.response.status
     return Promise.reject(err)
 })
 

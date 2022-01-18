@@ -1,7 +1,6 @@
-.auth-page {
-
+.auth-page{
+    padding-top: 3rem
 }
-
 .auth-page .buttons .btn {
     margin-right: 10px;
 }
@@ -9,3 +8,6 @@
 .auth-page .card-title {
     /*font-weight: 500;*/
 }
+/*.input-field label{*/
+/*    pointer-events: all !important;*/
+/*}*/

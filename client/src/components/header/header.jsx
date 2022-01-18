@@ -35,7 +35,7 @@ export const Header = () => {
             <div className="header">
                 <nav>
                     <div className="nav-wrapper header teal lighten-1">
-                    <span className={` brand-logo ${split[1] === '' ? 'active' : ''}`}><NavLink
+                    <span className={`brand-logo ${split[1] === '' ? 'active' : ''}`}><NavLink
                         to={'/'}>ShrInk.tech</NavLink></span>
                         <a href="#" data-target="mobile-menu" className="sidenav-trigger"><i
                             className="material-icons">menu</i></a>

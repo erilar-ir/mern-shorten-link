@@ -7,13 +7,18 @@ const generateRefreshToken = (res, userData) => {
     return res.json(userData)
 }
 
+const processValidationResult = (req) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        const errorsArray = errors.array().map(err => err.msg)
+        throw ErrorHandler.BadRequest('Validation error', errorsArray)
+    }
+}
+
 class UserController {
     async registration(req, res, next) {
         try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return next(ErrorHandler.BadRequest('Validation error', errors.array()))
-            }
+            processValidationResult(req)
             const {email, password} = req.body
             const userData = await userService.registration(email, password)
             return generateRefreshToken(res, userData)
@@ -24,11 +29,7 @@ class UserController {
 
     async login(req, res, next) {
         try {
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                console.log('Validation error', errors.array())
-                return next(ErrorHandler.BadRequest('Validation error', errors.array()))
-            }
+            processValidationResult(req)
             const {email, password} = req.body
             const userData = await userService.login(email, password)
             return generateRefreshToken(res, userData)

@@ -61,42 +61,43 @@ export const GenerateLinkForm = ({modalMode = false, closeModal = noop, id: grou
         M.updateTextFields()
     }, [formError])
     if (selectAddingLinkStatus) {
-        return <Loader />
+        return <Loader/>
     }
     return (
         <div className={'generate-link-form'}>
-            <div className="input-field">
-                <i className={`material-icons prefix ${formError && 'red-text'}`}>link</i>
-                <input
-                    ref={focusedInput ? focusedInput : null}
-                    type="text"
-                    id={'link'}
-                    name={'link'}
-                    value={form.link}
-                    onChange={formHandler}
-                    onKeyPress={enterPressHandler}
-                    placeholder={'Enter long url like https://www.google.com'}
-                    className={formError && 'invalid'}
-                />
-                <label htmlFor="{'link'}">Url</label>
-                {formError && <span className="helper-text" data-error={formError}>Helper text</span>}
-            </div>
-            <div className="input-field">
-                <i className="material-icons prefix">title</i>
-                <input type="text"
-                       name={'title'}
-                       id={'title'}
-                       value={form.title}
-                       onChange={formHandler}
-                       onKeyPress={enterPressHandler}
-                       placeholder={'Enter custom title'}
-                />
-                <label htmlFor="{'title'}">Title</label>
-            </div>
-            <div className="buttons">
-                <button className="btn teal lighten-2" onClick={generateLink}>Create Short Link</button>
-            </div>
-
+            <form className={''}>
+                <div className="input-field">
+                    <i className={`material-icons prefix ${formError && 'red-text'}`}>link</i>
+                    <input
+                        ref={focusedInput ? focusedInput : null}
+                        type="text"
+                        id={'link'}
+                        name={'link'}
+                        value={form.link}
+                        onChange={formHandler}
+                        onKeyPress={enterPressHandler}
+                        placeholder={'Enter long url like https://www.google.com'}
+                        className={formError && 'invalid'}
+                    />
+                    <label htmlFor="{'link'}">Url</label>
+                    {formError && <span className="helper-text" data-error={formError}>Helper text</span>}
+                </div>
+                <div className="input-field">
+                    <i className="material-icons prefix">title</i>
+                    <input type="text"
+                           name={'title'}
+                           id={'title'}
+                           value={form.title}
+                           onChange={formHandler}
+                           onKeyPress={enterPressHandler}
+                           placeholder={'Enter custom title'}
+                    />
+                    <label htmlFor="{'title'}">Title</label>
+                </div>
+                <div className="buttons">
+                    <button className="btn teal lighten-2" onClick={generateLink}>Create Short Link</button>
+                </div>
+            </form>
         </div>
     )
 }

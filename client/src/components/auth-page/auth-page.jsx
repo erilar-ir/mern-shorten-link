@@ -1,77 +1,110 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react"
 import './auth-page.css'
-import { useMessage} from "../../hooks";
-import {useDispatch, useSelector} from "react-redux";
-import {login, register, selectAuthReady} from "../../store/auth-slice";
+import {useMessage} from "../../hooks"
+import {useDispatch, useSelector} from "react-redux"
+import {login, register, selectAuthError, selectAuthReady, selectUserForm, setUserForm} from "../../store/auth-slice"
 
 export const AuthPage = () => {
-
     const dispatch = useDispatch()
-    // const error = useSelector(selectAuthError)
     const ready = useSelector(selectAuthReady)
-
+    const userForm = useSelector(selectUserForm)
+    const authError = useSelector(selectAuthError)
+    let emailErrorMessage,
+        passwordErrorMessage = null
+    if (authError) {
+        if (authError.message.toLowerCase().includes('user')) {
+            emailErrorMessage = authError.message
+        }
+        if (authError.message.toLowerCase().includes('password')) {
+            passwordErrorMessage = authError.message
+        }
+        if (authError.errors.length > 0) {
+            authError.errors.forEach(err => {
+                if (err.toLowerCase().includes('email')) {
+                    emailErrorMessage = emailErrorMessage ? `${emailErrorMessage}, ${err}` : err
+                }
+                if (err.toLowerCase().includes('password')) {
+                    passwordErrorMessage = passwordErrorMessage ? `${passwordErrorMessage}, ${err}` : err
+                }
+            })
+        }
+    }
     const [form, setForm] = useState({
-        email: '', password: ''
+        email: userForm ? userForm.email : '',
+        password: userForm ? userForm.password : ''
     })
     const message = useMessage()
-    // useEffect(async () => {
-    //     if (error) {
-    //         message(error.message, 'warn')
-    //         dispatch(clearError)
-    //     }
-    // }, [error])
-
     const formHandler = (event) => {
         setForm({...form, [event.target.name]: event.target.value})
     }
 
     const registerHandler = async () => {
-      try {
-          const email = form.email
-          const password = form.password
-          await dispatch(register({email: email, password: password})).unwrap()
-          message(`User created successfully. Activation link sent to ${form.email}.`, 'success')
-      }catch (e) {
-          message(e.message, 'error')
-      }
+        try {
+            const email = form.email
+            const password = form.password
+            dispatch(setUserForm(form))
+            await dispatch(register({email: email, password: password})).unwrap()
+            message(`User created successfully. Activation link sent to ${form.email}.`, 'success')
+        } catch (e) {
+            message(e.message, 'warn')
+        }
     }
     const loginHandler = async () => {
-      try {
-          const email = form.email
-          const password = form.password
-          await dispatch(login({email: email, password: password})).unwrap()
-      }catch (e) {
-          message(e.message, 'error')
-      }
+        try {
+            const email = form.email
+            const password = form.password
+            dispatch(setUserForm(form))
+            await dispatch(login({email: email, password: password})).unwrap()
+        } catch (e) {
+            message(e.message, 'warn')
+        }
     }
+    useEffect(() => {
+        M.updateTextFields()
+    }, [])
+    const disableOnEmptyInputs = !(form.email.length === 0 || form.password.length === 0)
+    return (
+        <div className={'auth-page'}>
+            <div className="row">
+                <div className="col s12 m10 l6 offset-l3 offset-m1">
+                    <div className="card grey lighten-5">
+                        <div className="card-content black-text">
+                            <span className="card-title">Authorization</span>
+                                <div className={'auth-form-fields'}>
+                                    <div className="input-field">
+                                        <input
+                                            type="text"
+                                            id={'user_email'}
+                                            name={'email'}
+                                            onChange={formHandler}
+                                            value={form.email}
+                                            className={emailErrorMessage ? 'invalid': undefined}
+                                        />
+                                        <label htmlFor={'user_email'}>Email</label>
+                                        {emailErrorMessage && <span className="helper-text" data-error={emailErrorMessage}>Helper text</span>}
 
-  return (
-      <div className={'auth-page'}>
-         <div className="row">
-             <div className="col s12 m10 l6 offset-l3 offset-m1">
-                 <h1>Shorten the link</h1>
-                 <div className="card grey lighten-5">
-                     <div className="card-content black-text">
-                         <span className="card-title">Authorization</span>
-                         <div className={'auth-form-fields'}>
-                            <div className="input-field">
-                            <input type="text" id={'email'} name={'email'} onChange={formHandler} value={form.email}/>
-                                <label htmlFor="{'email'}">Email</label>
-                            </div>
-                            <div className="input-field">
-                            <input type="password" id={'password'} name={'password'} onChange={formHandler} value={form.password}/>
-                                <label htmlFor="{'password'}">Password</label>
-                            </div>
+                                    </div>
+                                    <div className="input-field">
+                                        <input
+                                            type="password"
+                                            id={'user_password'}
+                                            name={'password'}
+                                            onChange={formHandler}
+                                            value={form.password}
+                                            className={passwordErrorMessage ? 'invalid': undefined}/>
+                                        <label htmlFor={'user_password'}>Password</label>
+                                        {passwordErrorMessage && <span className="helper-text" data-error={passwordErrorMessage}>Helper text</span>}
 
-                         </div>
-                     </div>
-                     <div className="card-action buttons">
-                         <button className="btn yellow darken-4" onClick={loginHandler} disabled={!ready}>Sign In</button>
-                         <button className="btn teal lighten-1 " onClick={registerHandler} disabled={!ready}>Sign Up</button>
-                     </div>
-                 </div>
-             </div>
-         </div>
-      </div>
-  )
+                                    </div>
+                                </div>
+                        </div>
+                        <div className="card-action buttons">
+                            <button className="btn orange darken-1" onClick={loginHandler} disabled={!ready || !disableOnEmptyInputs}>Sign In</button>
+                            <button className="btn teal lighten-1 " onClick={registerHandler} disabled={!ready || !disableOnEmptyInputs}>Sign Up</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 }

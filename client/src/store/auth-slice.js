@@ -4,12 +4,14 @@ import $api from "../services";
 
 const storageName = 'userData'
 
+
 const logoutRoutine = state => {
     state.isAuthenticated = false
     localStorage.removeItem(storageName)
     state.status = 'success'
     state.ready = true
     state.authError = null
+    state.userForm = null
 }
 const loginRoutine = (state, action) => {
     const userData = {
@@ -20,6 +22,7 @@ const loginRoutine = (state, action) => {
     state.status = 'success'
     state.ready = true
     state.authError = null
+    state.userForm = null
 }
 
 const loadingRoutine = state => {
@@ -27,6 +30,12 @@ const loadingRoutine = state => {
     state.ready = false
 }
 
+const rejectRoutine = (state, action) => {
+    state.isAuthenticated = false
+    state.ready = true
+    state.status = 'failed'
+    state.authError = {message: action.payload.message, status: action.payload.status, errors: action.payload.errors ? action.payload.errors : []}
+}
 export const login = createAsyncThunk('auth/login', async ({email, password}, thunkAPI) => {
     try {
         const response = await $api.post('/api/auth/login', {email: email, password: password})
@@ -72,7 +81,8 @@ const authSlice = createSlice({
             isAuthenticated: !!localStorage.getItem('userData'),
             authError: null,
             status: 'idle',
-            ready: true
+            ready: true,
+            userForm: null
         },
         reducers: {
             clearError(state) {
@@ -83,6 +93,9 @@ const authSlice = createSlice({
             },
             setAuthError(state, action) {
                 state.error = action.payload
+            },
+            setUserForm(state, action) {
+                state.userForm = action.payload
             }
         },
         extraReducers(builder) {
@@ -94,10 +107,7 @@ const authSlice = createSlice({
                     loginRoutine(state, action)
                 })
                 .addCase(register.rejected, (state, action) => {
-                    state.isAuthenticated = false
-                    state.ready = true
-                    state.status = 'failed'
-                    state.authError = {message: action.payload.message, status: action.payload.status}
+                    rejectRoutine(state, action)
                 })
                 .addCase(login.pending, (state) => {
                     loadingRoutine(state)
@@ -106,10 +116,7 @@ const authSlice = createSlice({
                     loginRoutine(state, action)
                 })
                 .addCase(login.rejected, (state, action) => {
-                    state.isAuthenticated = false
-                    state.ready = true
-                    state.status = 'failed'
-                    state.authError = {message: action.payload.message, status: action.payload.status}
+                    rejectRoutine(state, action)
                 })
                 .addCase(logout.pending, (state) => {
                     loadingRoutine(state)
@@ -133,9 +140,9 @@ const authSlice = createSlice({
         }
     }
 )
-export const {clearError, setAuthError} = authSlice.actions
+export const {clearError, setAuthError, setUserForm} = authSlice.actions
 export default authSlice.reducer
-
+export const selectUserForm = state => state.auth.userForm
 export const selectAuthStatus = state => state.auth.status
 export const selectIsAuthenticated = state => state.auth.isAuthenticated
 export const selectAuthReady = state => state.auth.ready

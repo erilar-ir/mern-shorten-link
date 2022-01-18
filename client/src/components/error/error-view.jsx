@@ -12,8 +12,9 @@ export const ErrorView = ({err}) => {
             </div>
             <h5 className={'grey-text text-darken-1'}>Something went wrong.</h5>
             <div className="action-button">
-                <NavLink to={'/'} className={'btn teal lighten-2'}><i className={'material-icons left'}>arrow_back
-                </i> Back to homepage</NavLink>
+                Try to reload page
+                {/*<NavLink to={'/'} className={'btn teal lighten-2'}><i className={'material-icons left'}>arrow_back*/}
+                {/*</i> Back to homepage</NavLink>*/}
             </div>
             {/*<details style={{whiteSpace: 'pre-wrap'}}>*/}
             {/*    {error && error.toString()}*/}

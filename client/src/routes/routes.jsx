@@ -9,6 +9,8 @@ import AuthPage from "../components/auth-page";
 import GroupsManagement from "../components/groups-manage";
 import GroupDetails from "../components/group-details";
 import DashboardPage from "../components/dashboard-page";
+import PasswordReset from "../components/password-reset";
+import ForgotPassword from "../components/forgot-password";
 
 export const Routes = (isAuthenticated) => {
     if (!isAuthenticated) {
@@ -19,6 +21,12 @@ export const Routes = (isAuthenticated) => {
                 </Route>
                 <Route path={'/auth'} exact>
                     <AuthPage />
+                </Route>
+                <Route path={'/forgotten'} exact>
+                    <ForgotPassword />
+                </Route>
+                <Route path={'/resetPassword'} exact>
+                    <PasswordReset />
                 </Route>
                 <Redirect to={'/'} />
             </Switch>

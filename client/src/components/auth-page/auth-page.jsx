@@ -3,6 +3,8 @@ import './auth-page.css'
 import {useMessage} from "../../hooks"
 import {useDispatch, useSelector} from "react-redux"
 import {login, register, selectAuthError, selectAuthReady, selectUserForm, setUserForm} from "../../store/auth-slice"
+import {NavLink} from "react-router-dom";
+import M from 'materialize-css'
 
 export const AuthPage = () => {
     const dispatch = useDispatch()
@@ -40,8 +42,7 @@ export const AuthPage = () => {
 
     const registerHandler = async () => {
         try {
-            const email = form.email
-            const password = form.password
+            const {email, password} = form
             dispatch(setUserForm(form))
             await dispatch(register({email: email, password: password})).unwrap()
             message(`User created successfully. Activation link sent to ${form.email}.`, 'success')
@@ -51,8 +52,7 @@ export const AuthPage = () => {
     }
     const loginHandler = async () => {
         try {
-            const email = form.email
-            const password = form.password
+            const {email, password} = form
             dispatch(setUserForm(form))
             await dispatch(login({email: email, password: password})).unwrap()
         } catch (e) {
@@ -101,6 +101,7 @@ export const AuthPage = () => {
                         <div className="card-action buttons">
                             <button className="btn orange darken-1" onClick={loginHandler} disabled={!ready || !disableOnEmptyInputs}>Sign In</button>
                             <button className="btn teal lighten-1 " onClick={registerHandler} disabled={!ready || !disableOnEmptyInputs}>Sign Up</button>
+                            <NavLink className={'orange-text forgot'} to={'/forgotten'}>Forgot your password?</NavLink>
                         </div>
                     </div>
                 </div>

@@ -69,6 +69,25 @@ class UserController {
             next(e)
         }
     }
+    async requestResetPassword(req, res, next) {
+        try {
+            const email = req.body.email
+            const requestedReset = await userService.requestPasswordReset(email)
+            return res.json({message:`Reset password link sent to ${email}`})
+        } catch (e) {
+            next(e)
+        }
+    }
+    async resetPassword(req, res, next) {
+        try {
+            processValidationResult(req)
+            const {userId, token, password} = req.body
+            const resetPassword = await userService.resetPassword(userId, token, password)
+            return res.json({message:`Password had been successfully updated.`})
+        } catch (e) {
+            next(e)
+        }
+    }
 }
 
 module.exports = new UserController()

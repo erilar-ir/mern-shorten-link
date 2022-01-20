@@ -1,5 +1,10 @@
 const jwt = require('jsonwebtoken')
 const tokenModel = require('../models/Token')
+const bcrypt = require('bcryptjs')
+const ErrorHandler = require("../exceptions/error-handler");
+const crypto = require('crypto')
+const moment = require('moment')
+
 
 class TokenService {
     generateToken(payload) {
@@ -9,6 +14,44 @@ class TokenService {
         return {
             accessToken,
             refreshToken
+        }
+    }
+
+   async generateAndSaveResetToken(userDto) {
+        try {
+            const existingToken = await tokenModel.findOne({user: userDto.id})
+            if (existingToken) {
+               await tokenModel.deleteMany({user: userDto.id})
+            }
+            const token = crypto.randomBytes(32).toString('hex')
+            const hashedToken = await bcrypt.hash(token, +process.env.BCRYPT_SALT)
+            const expireDate = moment().add(1, 'h')
+            await tokenModel.create({
+                user: userDto.id,
+                refreshToken: hashedToken,
+                expireAt: expireDate
+            })
+            return token
+        }
+        catch (e) {
+            console.log(e)
+          return null
+        }
+    }
+
+    async validateResetToken(userId, token) {
+        try {
+            const passwordResetToken = await tokenModel.findOne({ user: userId })
+            if (!passwordResetToken) {
+                throw ErrorHandler.UnauthorizedError('Invalid or expired password reset token')
+            }
+            const isValid = await bcrypt.compare(token, passwordResetToken.refreshToken)
+            if (!isValid) {
+                throw ErrorHandler.UnauthorizedError('Invalid or expired password reset token')
+            }
+            return passwordResetToken
+        } catch (e) {
+            return null
         }
     }
 
@@ -42,7 +85,6 @@ class TokenService {
 
     async removeToken(refreshToken) {
         const tokenData = await tokenModel.deleteOne({refreshToken})
-        console.log('removed token', tokenData)
         return tokenData
 
     }

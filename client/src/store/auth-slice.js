@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
-import $api from "../services";
+import $api from "../services"
 
 const storageName = 'userData'
 
@@ -36,6 +36,22 @@ const rejectRoutine = (state, action) => {
     state.status = 'failed'
     state.authError = {message: action.payload.message, status: action.payload.status, errors: action.payload.errors ? action.payload.errors : []}
 }
+export const resetPasswordRequest = createAsyncThunk('auth/resetPasswordRequest', async ({email}, thunkAPI) => {
+    try {
+        const response = await $api.post('/api/auth/requestReset', {email: email})
+        return response.data
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e)
+    }
+})
+export const resetPassword = createAsyncThunk('auth/resetPassword', async ({userId, token, password}, thunkAPI) => {
+    try {
+        const response = await $api.post('/api/auth/resetPassword', {userId: userId, token: token, password: password})
+        return response.data
+    } catch (e) {
+        return thunkAPI.rejectWithValue(e)
+    }
+})
 export const login = createAsyncThunk('auth/login', async ({email, password}, thunkAPI) => {
     try {
         const response = await $api.post('/api/auth/login', {email: email, password: password})
@@ -137,6 +153,26 @@ const authSlice = createSlice({
                     state.authError = {message: action.payload.message, status: action.payload.status}
                     logoutRoutine(state)
                 })
+                .addCase(resetPasswordRequest.pending, (state) => {
+                    loadingRoutine(state)
+                })
+                .addCase(resetPasswordRequest.fulfilled, (state, action) => {
+                    state.status = 'idle'
+                    state.ready = true
+                })
+                .addCase(resetPasswordRequest.rejected, (state, action) => {
+                    rejectRoutine(state, action)
+                }).addCase(resetPassword.pending, (state) => {
+                loadingRoutine(state)
+                })
+                .addCase(resetPassword.fulfilled, (state, action) => {
+                    state.status = 'idle'
+                    state.ready = true
+                })
+                .addCase(resetPassword.rejected, (state, action) => {
+                    rejectRoutine(state, action)
+                })
+
         }
     }
 )

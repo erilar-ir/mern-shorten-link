@@ -7565,7 +7565,7 @@ function createThunkMiddleware(extraArgument) {
 var thunk = createThunkMiddleware();
 thunk.withExtraArgument = createThunkMiddleware;
 var thunkMiddleware = thunk;
-var __extends = function() {
+var __extends = globalThis && globalThis.__extends || function() {
   var extendStatics = function(d2, b2) {
     extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d3, b3) {
       d3.__proto__ = b3;
@@ -7586,7 +7586,7 @@ var __extends = function() {
     d2.prototype = b2 === null ? Object.create(b2) : (__.prototype = b2.prototype, new __());
   };
 }();
-var __generator = function(thisArg, body) {
+var __generator = globalThis && globalThis.__generator || function(thisArg, body) {
   var _2 = { label: 0, sent: function() {
     if (t2[0] & 1)
       throw t2[1];
@@ -7662,7 +7662,7 @@ var __generator = function(thisArg, body) {
     return { value: op[0] ? op[1] : void 0, done: true };
   }
 };
-var __spreadArray = function(to, from) {
+var __spreadArray = globalThis && globalThis.__spreadArray || function(to, from) {
   for (var i2 = 0, il = from.length, j2 = to.length; i2 < il; i2++, j2++)
     to[j2] = from[i2];
   return to;
@@ -9462,7 +9462,9 @@ function invariant(condition, message) {
   if (isProduction) {
     throw new Error(prefix);
   }
-  throw new Error(prefix + ": " + (message || ""));
+  var provided = typeof message === "function" ? message() : message;
+  var value = provided ? prefix + ": " + provided : prefix;
+  throw new Error(value);
 }
 function addLeadingSlash$1(path) {
   return path.charAt(0) === "/" ? path : "/" + path;
@@ -36586,4 +36588,4 @@ adapters._date.override({
     return this._create(time).endOf(unit).valueOf();
   }
 });
-export { ArcElement as A, BarElement as B, Chart$1 as C, Doughnut as D, Link as L, M$1 as M, NavLink as N, PointElement as P, React as R, Switch as S, TimeScale as T, axios as a, createSlice as b, createAsyncThunk as c, configureStore as d, useHistory as e, useSelector as f, useParams as g, CategoryScale as h, LinearScale as i, plugin_tooltip as j, plugin_legend as k, randomColor as l, LineElement as m, TimeSeriesScale as n, Bar as o, plugin_title as p, DateTime as q, react as r, Route as s, Redirect as t, useDispatch as u, useLocation as v, BrowserRouter as w, ReactDOM as x, Provider as y };
+export { ArcElement as A, BarElement as B, Chart$1 as C, Doughnut as D, Link as L, M$1 as M, NavLink as N, PointElement as P, React as R, Switch as S, TimeScale as T, axios as a, createSlice as b, createAsyncThunk as c, configureStore as d, useHistory as e, useSelector as f, useParams as g, CategoryScale as h, LinearScale as i, plugin_tooltip as j, plugin_legend as k, randomColor as l, LineElement as m, TimeSeriesScale as n, Bar as o, plugin_title as p, DateTime as q, react as r, useLocation as s, Route as t, useDispatch as u, Redirect as v, BrowserRouter as w, ReactDOM as x, Provider as y };

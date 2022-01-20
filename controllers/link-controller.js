@@ -178,7 +178,6 @@ class LinkController {
             }
 
             await link.save()
-
             return res.status(201).json({link})
         } catch (e) {
             if (e.message) {

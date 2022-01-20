@@ -1,13 +1,14 @@
 .auth-page{
     padding-top: 3rem
 }
+.auth-page .buttons {
+    display: flex;
+    align-items: center;
+}
 .auth-page .buttons .btn {
-    margin-right: 10px;
+    margin-right: .8rem;
 }
 
-.auth-page .card-title {
-    /*font-weight: 500;*/
+.forgot {
+    margin-left: 1rem;
 }
-/*.input-field label{*/
-/*    pointer-events: all !important;*/
-/*}*/

@@ -9400,16 +9400,17 @@ nav .input-field label {
 .auth-page{
     padding-top: 3rem
 }
+.auth-page .buttons {
+    display: flex;
+    align-items: center;
+}
 .auth-page .buttons .btn {
-    margin-right: 10px;
+    margin-right: .8rem;
 }
 
-.auth-page .card-title {
-    /*font-weight: 500;*/
+.forgot {
+    margin-left: 1rem;
 }
-/*.input-field label{*/
-/*    pointer-events: all !important;*/
-/*}*/
 .group-list {
     position: relative;
     /*width: 80%;*/
@@ -9772,6 +9773,37 @@ nav .input-field label {
 .cities-chart {
     height: 18rem;
     min-height: 18rem;
+}
+.password-reset {
+    margin-top: 3rem;
+}
+.card-title {
+    margin-top: 0!important;
+}
+.full-width{
+    width: 100%;
+}
+.forgot-password {
+    margin-top: 3rem;
+}
+.forgot-bot {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.full-width{
+    width: 100%;
+}
+.forgot-password .bot-img {
+    height: 8rem;
+    max-height: 8rem;
+    max-width: 8rem;
+    padding-bottom: .8rem
+;
+}
+.forgot-title {
+    font-weight: 400 !important;
 }
 .header{
 }

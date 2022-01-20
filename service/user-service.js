@@ -29,7 +29,7 @@ class UserService {
         if (candidate) {
             throw ErrorHandler.BadRequest(`User with email ${email} already exists`)
         }
-        const hashPassword = await bcrypt.hash(password, 3)
+        const hashPassword = await bcrypt.hash(password, +process.env.BCRYPT_SALT)
         const activationLink = uuid.v4()
         try{
             const expireDate = moment().add(7, 'd')
@@ -38,7 +38,7 @@ class UserService {
 
             // First way to send via SMTP
             // await mailService.sendActivationMail(email, `${process.env.BASE_URL}/api/auth/activate/${activationLink}`)
-            await mailService.sendAxiosMail(email, `${process.env.BASE_URL}/api/auth/activate/${activationLink}`)
+            await mailService.sendActivationMail(email, `${process.env.BASE_URL}/api/auth/activate/${activationLink}`)
 
             return createAndSaveTokens(user)
 
@@ -94,6 +94,41 @@ class UserService {
         return createAndSaveTokens(user)
     }
 
+    async requestPasswordReset(email) {
+        try {
+            const user = await UserModel.findOne({email})
+            if (!user) {
+                throw ErrorHandler.BadRequest('User with email ' + email + ' not found')
+            }
+            const userDto = new UserDto(user)
+            const resetToken = await tokenService.generateAndSaveResetToken(userDto)
+            const resetLink = `${process.env.CLIENT_URL}/resetPassword?token=${resetToken}&id=${user._id}`
+            console.log(resetLink)
+
+            await mailService.sendResetMail(email, resetLink)
+            return resetLink
+        }
+        catch (e) {
+            console.log(e)
+        }
+    }
+    async resetPassword(userId, token, password) {
+        try {
+            const passwordResetToken = await tokenService.validateResetToken(userId, token)
+            if (!passwordResetToken) {
+                throw ErrorHandler.UnauthorizedError('Password reset token is invalid')
+            }
+            const hashedPassword = await bcrypt.hash(password, +process.env.BCRYPT_SALT)
+            const user = await UserModel.findOne({_id: userId})
+            user.password = hashedPassword
+            await user.save()
+            await mailService.sendResetConfirmationMail(user.email)
+            await passwordResetToken.deleteOne()
+
+        }catch (e) {
+            console.log(e)
+        }
+    }
 }
 
 module.exports = new UserService()

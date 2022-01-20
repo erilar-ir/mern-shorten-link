@@ -20,7 +20,7 @@ class UserController {
         try {
             processValidationResult(req)
             const {email, password} = req.body
-            const userData = await userService.registration(email, password)
+            const userData = await userService.registration(email.toLowerCase(), password)
             return generateRefreshToken(res, userData)
         } catch (e) {
             next(e)
@@ -31,7 +31,7 @@ class UserController {
         try {
             processValidationResult(req)
             const {email, password} = req.body
-            const userData = await userService.login(email, password)
+            const userData = await userService.login(email.toLowerCase(), password)
             return generateRefreshToken(res, userData)
         } catch (e) {
             next(e)
@@ -72,7 +72,7 @@ class UserController {
     async requestResetPassword(req, res, next) {
         try {
             const email = req.body.email
-            const requestedReset = await userService.requestPasswordReset(email)
+            const requestedReset = await userService.requestPasswordReset(email.toLowerCase())
             return res.json({message:`Reset password link sent to ${email}`})
         } catch (e) {
             next(e)

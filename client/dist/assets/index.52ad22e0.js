@@ -1355,7 +1355,7 @@ const AuthPage = () => {
   }, /* @__PURE__ */ React.createElement("div", {
     className: "input-field"
   }, /* @__PURE__ */ React.createElement("input", {
-    type: "text",
+    type: "email",
     id: "user_email",
     name: "email",
     onChange: formHandler,
@@ -2173,7 +2173,7 @@ const ForgotPassword = () => {
   }, /* @__PURE__ */ React.createElement("div", {
     className: "input-field"
   }, /* @__PURE__ */ React.createElement("input", {
-    type: "text",
+    type: "email",
     id: "user_email",
     name: "email",
     onChange: formHandler,

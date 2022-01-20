@@ -41,7 +41,7 @@ export const ForgotPassword = () => {
                             <div className={'forgot-password-form-fields'}>
                                 <div className="input-field">
                                     <input
-                                        type="text"
+                                        type="email"
                                         id={'user_email'}
                                         name={'email'}
                                         onChange={formHandler}

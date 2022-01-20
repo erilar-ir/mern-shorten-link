@@ -73,7 +73,7 @@ export const AuthPage = () => {
                                 <div className={'auth-form-fields'}>
                                     <div className="input-field">
                                         <input
-                                            type="text"
+                                            type="email"
                                             id={'user_email'}
                                             name={'email'}
                                             onChange={formHandler}
